@@ -80,6 +80,10 @@
                 <button class="btn btn-primary w-100">Se connecter</button>
             </form>
 
+            <div class="d-grid gap-2 mt-3">
+                <a href="<?= base_url('register') ?>" class="btn btn-outline-secondary">Créer un compte</a>
+            </div>
+
             <hr>
             <p class="text-center text-muted small">
                 <a href="<?= base_url('/') ?>" class="text-decoration-none">Retour à l'accueil</a>
