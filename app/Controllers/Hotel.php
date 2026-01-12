@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use App\Models\ChambreModel;
 use App\Models\ReserveModel;
-use App\Models\UtilisateurModel;
+use App\Models\UserModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 
 class Hotel extends BaseController
@@ -20,6 +20,11 @@ class Hotel extends BaseController
 
     public function detail($id)
     {
+        // Vérifier si l'utilisateur est connecté
+        if (!session()->get('isLoggedIn')) {
+            return redirect()->to('/login')->with('message', 'Veuillez vous connecter pour réserver une chambre');
+        }
+
         $model = new ChambreModel();
         $chambre = $model->getChambreDetail($id);
 
@@ -66,7 +71,7 @@ class Hotel extends BaseController
         // On génère un login (ex: prenom.nom)
         $userLogin = strtolower($post['user_prenom'] . '.' . $post['user_nom'] . rand(10,99));
 
-        $userModel = new UtilisateurModel();
+        $userModel = new UserModel();
         
         // Vérif si email existe déjà (Optionnel : si auth arrive après, on peut juste vérifier l'email)
         $existingUser = $userModel->where('user_mail', $post['user_mail'])->first();

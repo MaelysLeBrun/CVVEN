@@ -8,6 +8,7 @@ class LoginController extends BaseController
 {
     public function login()
     {
+        // juste pour tester la vue, sans session ni POST
         return view('auth/login');
     }
 
@@ -16,22 +17,23 @@ class LoginController extends BaseController
         $session = session();
         $model = new UserModel();
 
-        $email = $this->request->getPost('email');
-        $password = $this->request->getPost('password');
+        $login = $this->request->getPost('user_login');
+        $password = $this->request->getPost('user_mdp');
 
-        $user = $model->where('email', $email)->first();
+        $user = $model->where('user_login', $login)->first();
 
-        if (!$user || !password_verify($password, $user['password'])) {
+        //if (!$user || !password_verify($password, $user['user_mdp'])) {
+        if (!$user || $password !== $user['user_mdp']) {
             return redirect()->back()->with('error', 'Identifiants incorrects');
         }
 
         $session->set([
-            'user_id'    => $user['id'],
-            'email'      => $user['email'],
+            'user_id'    => $user['user_id'],
+            'user_login' => $user['user_login'],
             'isLoggedIn' => true
         ]);
 
-        return redirect()->to('/');
+        return redirect()->to('/'); // index de Hotel
     }
 
     public function logout()
