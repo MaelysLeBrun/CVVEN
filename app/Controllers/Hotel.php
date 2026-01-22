@@ -11,10 +11,16 @@ class Hotel extends BaseController
 {
     public function index()
     {
-        $model = new ChambreModel();
-        // On récupère les chambres avec le libellé du type (grâce à la jointure dans le modèle)
-        $data['chambres'] = $model->getChambresAvecType();
-        
+        try {
+            $model = new ChambreModel();
+            // On récupère les chambres avec le libellé du type (grâce à la jointure dans le modèle)
+            $data['chambres'] = $model->getChambresAvecType();
+        } catch (\Exception $e) {
+
+            log_message('error', 'Erreur accès BDD dans Hotel::index - ' . $e->getMessage());
+            $data['chambres'] = [];
+        }
+
         return view('hotel/index', $data);
     }
 
