@@ -82,7 +82,6 @@ class LoginController extends BaseController
         $model = new UserModel();
 
         $rules = [
-            'user_login' => 'required|alpha_numeric_space|min_length[3]|is_unique[Utilisateur.user_login]',
             'user_mdp' => 'required|min_length[6]',
             'user_mdp_confirm' => 'matches[user_mdp]',
             'user_mail' => 'required|valid_email|is_unique[Utilisateur.user_mail]',
@@ -94,8 +93,28 @@ class LoginController extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
+        // Générer le login : première lettre du prénom + nom de famille
+        $prenom = $this->request->getPost('user_prenom');
+        $nom = $this->request->getPost('user_nom');
+        
+        // Nettoyer et normaliser les chaînes
+        $prenom = strtolower(trim($prenom));
+        $nom = strtolower(trim($nom));
+        
+        // Générer le login de base
+        $baseLogin = substr($prenom, 0, 1) . $nom;
+        $baseLogin = preg_replace('/[^a-z0-9]/', '', $baseLogin); // Retirer caractères spéciaux
+        
+        // Vérifier si le login existe déjà et ajouter un numéro si nécessaire
+        $login = $baseLogin;
+        $counter = 1;
+        while ($model->where('user_login', $login)->first()) {
+            $login = $baseLogin . $counter;
+            $counter++;
+        }
+
         $data = [
-            'user_login' => $this->request->getPost('user_login'),
+            'user_login' => $login,
             'user_mdp' => password_hash($this->request->getPost('user_mdp'), PASSWORD_DEFAULT),
             'user_nom' => $this->request->getPost('user_nom'),
             'user_prenom' => $this->request->getPost('user_prenom'),
