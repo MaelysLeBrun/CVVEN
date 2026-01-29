@@ -3,21 +3,160 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Réservation Hôtel CVVEN</title>
+    <title>CVVEN</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        :root {
+            --primary-color: #6B5344;
+            --primary-dark: #4a3a31;
+            --primary-light: #8B6F47;
+            --secondary-color: #4A7C59;
+            --accent-color: #D4A574;
+            --nature-green: #5A9D7A;
+        }
+
         body {
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            background-color: #faf7f2;
         }
+
+        .bg-light {
+            background-color: #faf7f2 !important;
+        }
+
         main {
             flex: 1;
         }
         footer {
-            background-color: #f8f9fa;
-            border-top: 1px solid #dee2e6;
+            background-color: var(--primary-color);
+            border-top: 3px solid var(--accent-color);
             margin-top: 40px;
+            color: white;
+        }
+
+        footer h5 {
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        footer p {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        footer a {
+            color: var(--accent-color);
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: white;
+            text-decoration: underline;
+        }
+
+        footer .text-muted {
+            color: rgba(255, 255, 255, 0.8) !important;
+        }
+
+        footer hr {
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Override Bootstrap primary */
+        .navbar-dark.bg-primary {
+            background-color: var(--primary-color) !important;
+        }
+
+        .bg-primary {
+            background-color: var(--primary-color) !important;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            border-color: var(--primary-dark);
+            color: white;
+        }
+
+        .btn-outline-light {
+            border-color: white;
+            color: white;
+        }
+
+        .btn-outline-light:hover {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            color: var(--primary-color);
+        }
+
+        /* Text colors for good contrast */
+        .navbar-dark .navbar-nav .nav-link {
+            color: rgba(255, 255, 255, 0.9) !important;
+            transition: color 0.3s ease;
+        }
+
+        .navbar-dark .navbar-nav .nav-link:hover {
+            color: var(--accent-color) !important;
+        }
+
+        .navbar-dark .navbar-brand {
+            color: white !important;
+        }
+
+        /* Card styling */
+        .card {
+            border-top: 4px solid var(--primary-color);
+            box-shadow: 0 4px 12px rgba(107, 83, 68, 0.15);
+        }
+
+        .card-header.bg-primary {
+            background-color: var(--primary-color) !important;
+            color: white;
+        }
+
+        /* Headings */
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--primary-dark);
+        }
+
+        /* Links */
+        a {
+            color: var(--primary-light);
+        }
+
+        a:hover {
+            color: var(--primary-dark);
+        }
+
+        /* Badge colors */
+        .badge.bg-primary {
+            background-color: var(--primary-color) !important;
+            color: white;
+        }
+
+        /* Alert styling */
+        .alert-info {
+            background-color: #e8f4f8;
+            border-color: var(--nature-green);
+            color: var(--primary-dark);
+        }
+
+        .alert-success {
+            background-color: #e8f5e9;
+            border-color: var(--nature-green);
+            color: var(--primary-dark);
+        }
+
+        .alert-danger {
+            background-color: #ffebee;
+            border-color: #c62828;
+            color: #b71c1c;
         }
     </style>
 </head>
@@ -34,14 +173,16 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="<?= base_url('/') ?>">Accueil</a>
-                        </li>
                         <?php if (session()->get('isLoggedIn')): ?>
                             <li class="nav-item">
                                 <span class="nav-link text-white">
                                     Bienvenue, <strong><?= esc(session()->get('user_login')) ?></strong>
                                 </span>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="<?= base_url('/mes-reservations') ?>">
+                                    Mes réservations
+                                </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link btn btn-outline-light btn-sm ms-2" href="<?= base_url('/logout') ?>">

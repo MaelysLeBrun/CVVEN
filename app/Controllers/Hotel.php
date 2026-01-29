@@ -140,4 +140,29 @@ class Hotel extends BaseController
             return redirect()->back()->withInput()->with('error', 'Erreur : Cette réservation existe déjà ou conflit technique.');
         }
     }
+
+    public function mesReservations()
+    {
+        // Vérifier si l'utilisateur est connecté
+        if (!session()->get('isLoggedIn')) {
+            return redirect()->to('/login')->with('message', 'Veuillez vous connecter pour voir vos réservations');
+        }
+
+        $userId = session()->get('user_id');
+        $reserveModel = new ReserveModel();
+
+        // Récupérer les réservations avec les détails de la chambre
+        $reservations = $reserveModel->select('Reserve.*, Chambre.chamb_numero, Chambre.chamb_emplacement, Type_Chambre.type_libelle, Type_Chambre.type_desc')
+                                    ->join('Chambre', 'Chambre.chamb_id = Reserve.chamb_id')
+                                    ->join('Type_Chambre', 'Type_Chambre.type_id = Chambre.type_id')
+                                    ->where('Reserve.user_id', $userId)
+                                    ->orderBy('Reserve.reser_dateDebut', 'DESC')
+                                    ->findAll();
+
+        $data = [
+            'reservations' => $reservations
+        ];
+
+        return view('hotel/mes_reservations', $data);
+    }
 }

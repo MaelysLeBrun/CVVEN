@@ -17,6 +17,7 @@ $routes->post('register', 'LoginController::register');
 
 $routes->get('chambre/(:segment)', 'Hotel::detail/$1');
 $routes->get('disponibilite/(:segment)', 'Hotel::disponibilite/$1');
+$routes->get('mes-reservations', 'Hotel::mesReservations');
 $routes->post('reserver', 'Hotel::reserver');
 
 

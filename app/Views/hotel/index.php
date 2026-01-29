@@ -4,7 +4,7 @@
 
 <!-- Hero Section -->
 <div class="text-white text-center py-5 mb-5 rounded-3 shadow position-relative overflow-hidden d-flex align-items-center" 
-     style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('<?= base_url('assets/images/hotel/hotelImage.jpg') ?>'); background-size: cover; background-position: center; min-height: 100vh;">
+     style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('<?= base_url('assets/images/hotel/hotelImage.png') ?>'); background-size: cover; background-position: center; min-height: 100vh;">
     <div class="container py-4 position-relative" style="z-index: 1;">
         <h1 class="display-3 fw-bold mb-4">🏨 Bienvenue à l'Hôtel CVVEN</h1>
         <p class="lead mb-4">Votre destination de luxe et de confort pour un séjour inoubliable</p>
