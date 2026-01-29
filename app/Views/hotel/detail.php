@@ -3,7 +3,82 @@
 <?= $this->section('content') ?>
 <div class="row">
     <div class="col-md-5">
-        <img src="https://placehold.co/600x400?text=Chambre+<?= $chambre['chamb_numero'] ?>" class="img-fluid rounded shadow mb-3">
+        <!-- Carrousel d'images de la chambre -->
+        <?php
+        // Préparer les images pour le carrousel
+        $images = [];
+        $extensions = ['jpg', 'jpeg', 'png', 'webp'];
+        
+        // Chercher l'image principale du type
+        foreach ($extensions as $ext) {
+            $mainPath = FCPATH . 'assets/images/chambres/type' . $chambre['type_id'] . '.' . $ext;
+            if (file_exists($mainPath)) {
+                $images[] = [
+                    'url' => base_url('assets/images/chambres/type' . $chambre['type_id'] . '.' . $ext),
+                    'alt' => $chambre['type_libelle']
+                ];
+                break;
+            }
+        }
+        
+        // Chercher l'image détails
+        foreach ($extensions as $ext) {
+            $detailPath = FCPATH . 'assets/images/chambres/type' . $chambre['type_id'] . 'details.' . $ext;
+            if (file_exists($detailPath)) {
+                $images[] = [
+                    'url' => base_url('assets/images/chambres/type' . $chambre['type_id'] . 'details.' . $ext),
+                    'alt' => $chambre['type_libelle'] . ' - Détails'
+                ];
+                break;
+            }
+        }
+        
+        // Si aucune image trouvée, utiliser un placeholder
+        if (empty($images)) {
+            $images[] = [
+                'url' => 'https://placehold.co/600x400/0d6efd/white?text=Chambre+' . $chambre['chamb_numero'],
+                'alt' => 'Chambre ' . $chambre['chamb_numero']
+            ];
+        }
+        ?>
+        
+        <?php if (count($images) > 1): ?>
+            <!-- Carrousel avec plusieurs images -->
+            <div id="chambreCarousel" class="carousel slide mb-3" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                    <?php foreach ($images as $index => $img): ?>
+                        <button type="button" data-bs-target="#chambreCarousel" data-bs-slide-to="<?= $index ?>" 
+                                class="<?= $index === 0 ? 'active' : '' ?>" 
+                                aria-current="<?= $index === 0 ? 'true' : 'false' ?>"></button>
+                    <?php endforeach; ?>
+                </div>
+                <div class="carousel-inner rounded shadow">
+                    <?php foreach ($images as $index => $img): ?>
+                        <div class="carousel-item <?= $index === 0 ? 'active' : '' ?>">
+                            <img src="<?= $img['url'] ?>" 
+                                 class="d-block w-100" 
+                                 alt="<?= esc($img['alt']) ?>"
+                                 style="height: 400px; object-fit: cover;">
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#chambreCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Précédent</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#chambreCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Suivant</span>
+                </button>
+            </div>
+        <?php else: ?>
+            <!-- Image unique -->
+            <img src="<?= $images[0]['url'] ?>" 
+                 class="img-fluid rounded shadow mb-3" 
+                 alt="<?= esc($images[0]['alt']) ?>"
+                 style="height: 400px; width: 100%; object-fit: cover;">
+        <?php endif; ?>
+        
         <h4><?= esc($chambre['type_libelle']) ?> (N°<?= esc($chambre['chamb_numero']) ?>)</h4>
         <p><?= esc($chambre['type_desc']) ?></p>
         <?php if($chambre['chamb_remarque']): ?>

@@ -14,8 +14,38 @@ class Hotel extends BaseController
         $model = new ChambreModel();
         // On récupère les chambres avec le libellé du type (grâce à la jointure dans le modèle)
         $data['chambres'] = $model->getChambresAvecType();
+        // Récupérer les types de chambres pour le carrousel
+        $data['types'] = $model->getTypesChambres();
         
         return view('hotel/index', $data);
+    }
+
+    public function disponibilite($typeId = null)
+    {
+        $model = new ChambreModel();
+        
+        // Récupérer les dates de la requête
+        $dateDebut = $this->request->getGet('date_debut');
+        $dateFin = $this->request->getGet('date_fin');
+        
+        // Récupérer toutes les chambres disponibles de ce type pour la période
+        $chambresDisponibles = $model->getChambresDisponiblesParType($typeId, $dateDebut, $dateFin);
+        
+        // Récupérer les infos du type
+        $typeInfo = $model->db->table('Type_Chambre')
+                              ->where('type_id', $typeId)
+                              ->get()
+                              ->getRowArray();
+        
+        $data = [
+            'chambres' => $chambresDisponibles,
+            'type' => $typeInfo,
+            'dateDebut' => $dateDebut,
+            'dateFin' => $dateFin,
+            'nombreDisponible' => count($chambresDisponibles)
+        ];
+        
+        return view('hotel/disponibilite', $data);
     }
 
     public function detail($id)
