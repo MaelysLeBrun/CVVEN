@@ -4,14 +4,38 @@ namespace App\Controllers;
 
 use App\Models\UserModel;
 
+/**
+ * Contrôleur pour l'authentification des utilisateurs
+ * 
+ * Gère la connexion, l'inscription et la déconnexion des utilisateurs.
+ * Utilise les sessions pour maintenir l'état de connexion.
+ * 
+ * @package App\Controllers
+ * @author  CVVEN
+ * @version 1.0.0
+ */
 class LoginController extends BaseController
 {
+    /**
+     * Affiche le formulaire de connexion
+     * 
+     * @return string Vue du formulaire de connexion
+     */
     public function login()
     {
         // juste pour tester la vue, sans session ni POST
         return view('auth/login');
     }
 
+    /**
+     * Traite la tentative de connexion
+     * 
+     * Vérifie les identifiants de l'utilisateur (login et mot de passe).
+     * Si valides, crée une session avec les informations de l'utilisateur.
+     * Sinon, redirige vers le formulaire avec un message d'erreur.
+     * 
+     * @return \CodeIgniter\HTTP\RedirectResponse Redirection vers l'accueil ou retour au formulaire
+     */
     public function attemptLogin()
     {
         $session = session();
@@ -45,6 +69,12 @@ class LoginController extends BaseController
 
     /**
      * Traite l'inscription d'un nouvel utilisateur
+     * 
+     * Valide les données du formulaire (login unique, email unique, mot de passe confirmé),
+     * hache le mot de passe et crée l'utilisateur en base de données.
+     * Connecte automatiquement l'utilisateur après inscription réussie.
+     * 
+     * @return \CodeIgniter\HTTP\RedirectResponse Redirection vers l'accueil ou retour au formulaire avec erreurs
      */
     public function register()
     {
@@ -85,6 +115,13 @@ class LoginController extends BaseController
 
         return redirect()->to('/');
     }
+    /**
+     * Déconnecte l'utilisateur
+     * 
+     * Détruit la session et redirige vers la page de connexion.
+     * 
+     * @return \CodeIgniter\HTTP\RedirectResponse Redirection vers la page de connexion
+     */
     public function logout()
     {
         session()->destroy();

@@ -7,8 +7,26 @@ use App\Models\ReserveModel;
 use App\Models\UserModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 
+/**
+ * Contrôleur pour la gestion des chambres d'hôtel
+ * 
+ * Gère l'affichage des chambres, la vérification de disponibilité,
+ * les réservations et la gestion des réservations utilisateur.
+ * 
+ * @package App\Controllers
+ * @author  CVVEN
+ * @version 1.0.0
+ */
 class Hotel extends BaseController
 {
+    /**
+     * Affiche la liste de toutes les chambres avec leurs types
+     * 
+     * Récupère toutes les chambres avec jointure sur Type_Chambre
+     * et affiche la vue principale de l'hôtel avec un carrousel des types.
+     * 
+     * @return string Vue de l'index de l'hôtel
+     */
     public function index()
     {
         $model = new ChambreModel();
@@ -20,6 +38,15 @@ class Hotel extends BaseController
         return view('hotel/index', $data);
     }
 
+    /**
+     * Affiche les chambres disponibles pour un type et une période
+     * 
+     * Vérifie la disponibilité des chambres d'un type spécifique pour une période donnée.
+     * Les dates sont passées en paramètres GET (date_debut et date_fin).
+     * 
+     * @param int|string|null $typeId Identifiant du type de chambre
+     * @return string Vue affichant les chambres disponibles
+     */
     public function disponibilite($typeId = null)
     {
         $model = new ChambreModel();
@@ -48,6 +75,16 @@ class Hotel extends BaseController
         return view('hotel/disponibilite', $data);
     }
 
+    /**
+     * Affiche les détails d'une chambre spécifique
+     * 
+     * Vérifie que l'utilisateur est connecté avant d'afficher les détails.
+     * Redirige vers la page de connexion si non connecté.
+     * 
+     * @param int|string $id Identifiant de la chambre
+     * @return \CodeIgniter\HTTP\RedirectResponse|string Vue des détails ou redirection
+     * @throws PageNotFoundException Si la chambre n'existe pas
+     */
     public function detail($id)
     {
         // Vérifier si l'utilisateur est connecté
@@ -65,6 +102,19 @@ class Hotel extends BaseController
         return view('hotel/detail', ['chambre' => $chambre]);
     }
 
+    /**
+     * Traite la réservation d'une chambre
+     * 
+     * Processus en deux étapes :
+     * 1. Création ou récupération de l'utilisateur (prospect)
+     * 2. Création de la réservation
+     * 
+     * Effectue des validations complètes des données du formulaire,
+     * vérifie que la date de fin est postérieure à la date de début,
+     * et gère les utilisateurs existants pour éviter les doublons.
+     * 
+     * @return \CodeIgniter\HTTP\RedirectResponse|string Vue de succès ou redirection avec erreurs
+     */
     public function reserver()
     {
         // Chargement des helpers et services
@@ -141,6 +191,14 @@ class Hotel extends BaseController
         }
     }
 
+    /**
+     * Affiche la liste des réservations de l'utilisateur connecté
+     * 
+     * Vérifie que l'utilisateur est connecté et récupère toutes ses réservations
+     * avec les détails des chambres associées, triées par date de début décroissante.
+     * 
+     * @return \CodeIgniter\HTTP\RedirectResponse|string Vue des réservations ou redirection vers login
+     */
     public function mesReservations()
     {
         // Vérifier si l'utilisateur est connecté

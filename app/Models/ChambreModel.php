@@ -4,14 +4,49 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
+/**
+ * Modèle pour la gestion des chambres d'hôtel
+ * 
+ * Gère les opérations CRUD sur la table Chambre et ses relations avec Type_Chambre
+ * 
+ * @package App\Models
+ * @author  CVVEN
+ * @version 1.0.0
+ */
 class ChambreModel extends Model
 {
+    /**
+     * Nom de la table dans la base de données
+     * @var string
+     */
     protected $table = 'Chambre';
+    
+    /**
+     * Clé primaire de la table
+     * @var string
+     */
     protected $primaryKey = 'chamb_id';
+    
+    /**
+     * Champs autorisés pour l'insertion et la mise à jour
+     * @var array<string>
+     */
     protected $allowedFields = ['chamb_emplacement', 'chamb_numero', 'chamb_remarque', 'type_id'];
+    
+    /**
+     * Type de retour des résultats
+     * @var string
+     */
     protected $returnType = 'array';
 
-    // Fonction pour récupérer les chambres avec leur type (Jointure)
+    /**
+     * Récupère toutes les chambres avec leurs informations de type
+     * 
+     * Effectue une jointure avec la table Type_Chambre pour récupérer
+     * le libellé et la description du type de chambre
+     * 
+     * @return array<array<string,mixed>> Liste des chambres avec leurs types
+     */
     public function getChambresAvecType()
     {
         return $this->select('Chambre.*, Type_Chambre.type_libelle, Type_Chambre.type_desc')
@@ -19,6 +54,12 @@ class ChambreModel extends Model
                     ->findAll();
     }
 
+    /**
+     * Récupère les détails d'une chambre spécifique avec son type
+     * 
+     * @param int|string $id Identifiant de la chambre
+     * @return array<string,mixed>|null Détails de la chambre ou null si non trouvée
+     */
     public function getChambreDetail($id)
     {
         return $this->select('Chambre.*, Type_Chambre.type_libelle, Type_Chambre.type_desc')
@@ -27,7 +68,11 @@ class ChambreModel extends Model
                     ->first();
     }
 
-    // Récupérer tous les types de chambres distincts
+    /**
+     * Récupère tous les types de chambres disponibles
+     * 
+     * @return array<array<string,mixed>> Liste de tous les types de chambres
+     */
     public function getTypesChambres()
     {
         return $this->db->table('Type_Chambre')
@@ -36,13 +81,29 @@ class ChambreModel extends Model
                         ->getResultArray();
     }
 
-    // Compter le nombre de chambres par type
+    /**
+     * Compte le nombre de chambres d'un type spécifique
+     * 
+     * @param int|string $typeId Identifiant du type de chambre
+     * @return int Nombre de chambres du type spécifié
+     */
     public function countChambresParType($typeId)
     {
         return $this->where('type_id', $typeId)->countAllResults();
     }
 
-    // Récupérer les chambres disponibles d'un certain type pour une période donnée
+    /**
+     * Récupère les chambres disponibles pour un type et une période donnés
+     * 
+     * Si des dates sont fournies, exclut les chambres déjà réservées durant cette période.
+     * La disponibilité est vérifiée en excluant les chambres avec des réservations qui 
+     * chevauchent la période demandée.
+     * 
+     * @param int|string      $typeId     Identifiant du type de chambre
+     * @param string|null     $dateDebut  Date de début de la période (format Y-m-d)
+     * @param string|null     $dateFin    Date de fin de la période (format Y-m-d)
+     * @return array<array<string,mixed>> Liste des chambres disponibles
+     */
     public function getChambresDisponiblesParType($typeId, $dateDebut = null, $dateFin = null)
     {
         $builder = $this->select('Chambre.*, Type_Chambre.type_libelle, Type_Chambre.type_desc')

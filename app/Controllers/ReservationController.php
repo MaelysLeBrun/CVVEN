@@ -5,10 +5,25 @@ namespace App\Controllers;
 use App\Models\ChambreModel;
 use App\Models\ReservationModel;
 
+/**
+ * Contrôleur pour la gestion des réservations
+ * 
+ * Gère l'affichage du formulaire de réservation, la vérification de disponibilité
+ * des chambres et le traitement des réservations.
+ * 
+ * @package App\Controllers
+ * @author  CVVEN
+ * @version 1.0.0
+ */
 class ReservationController extends BaseController
 {
     /**
      * Affiche le formulaire de réservation avec la liste des chambres disponibles
+     * 
+     * Récupère toutes les chambres disponibles et affiche le formulaire
+     * de réservation.
+     * 
+     * @return string Vue du formulaire de réservation
      */
     public function index()
     {
@@ -24,6 +39,12 @@ class ReservationController extends BaseController
 
     /**
      * Traite la réservation d'une chambre
+     * 
+     * Valide les données du formulaire, vérifie la disponibilité de la chambre
+     * pour les dates sélectionnées, et enregistre la réservation si valide.
+     * L'utilisateur doit être connecté (user_id en session).
+     * 
+     * @return \CodeIgniter\HTTP\RedirectResponse Redirection vers la page de succès ou retour avec erreurs
      */
     public function reserver()
     {
@@ -82,6 +103,10 @@ class ReservationController extends BaseController
 
     /**
      * Affiche la page de confirmation de réservation
+     * 
+     * Page affichée après une réservation réussie.
+     * 
+     * @return string Vue de confirmation
      */
     public function succes()
     {
