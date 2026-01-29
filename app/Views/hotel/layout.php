@@ -3,15 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CVVEN</title>
+    <title>CVVEN Hôtel</title>
+    <link rel="icon" type="image/png" href="<?= base_url('assets/images/hotel/hotelLogo.png') ?>">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
         :root {
-            --primary-color: #6B5344;
-            --primary-dark: #4a3a31;
-            --primary-light: #8B6F47;
-            --secondary-color: #4A7C59;
-            --accent-color: #D4A574;
+            --primary-color: #2F5233;
+            --primary-dark: #ebc98b;
+            --primary-light: #4A7C59;
+            --secondary-color: #3D5A40;
+            --accent-color: #C9B382;
             --nature-green: #5A9D7A;
         }
 
@@ -19,11 +21,11 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            background-color: #faf7f2;
+            background-color: #e8e3d8;
         }
 
         .bg-light {
-            background-color: #faf7f2 !important;
+            background-color: #e8e3d8 !important;
         }
 
         main {
@@ -113,6 +115,11 @@
         .card {
             border-top: 4px solid var(--primary-color);
             box-shadow: 0 4px 12px rgba(107, 83, 68, 0.15);
+            background-color: #f5f1e8;
+        }
+
+        .card-body {
+            background-color: #f5f1e8;
         }
 
         .card-header.bg-primary {

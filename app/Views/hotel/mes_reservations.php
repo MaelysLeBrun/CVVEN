@@ -52,7 +52,7 @@
                         <div class="card-body">
                             <!-- Détails de la chambre -->
                             <div class="mb-4 pb-3 border-bottom">
-                                <h6 class="text-muted mb-3">📍 Détails de la chambre</h6>
+                                <h6 class="text-muted mb-3"><i class="bi bi-geo-alt"></i> Détails de la chambre</h6>
                                 <p class="mb-2">
                                     <strong>Localisation :</strong> <?= esc($reservation['chamb_emplacement']) ?>
                                 </p>
@@ -63,7 +63,7 @@
 
                             <!-- Dates de la réservation -->
                             <div class="mb-4 pb-3 border-bottom">
-                                <h6 class="text-muted mb-3">📅 Dates de séjour</h6>
+                                <h6 class="text-muted mb-3"><i class="bi bi-calendar-check"></i> Dates de séjour</h6>
                                 <div class="row">
                                     <div class="col-6">
                                         <p class="mb-1">
@@ -91,15 +91,15 @@
                                 if ($dateFin < $maintenant) {
                                     $statut = 'Terminée';
                                     $couleur = 'secondary';
-                                    $icone = '✓';
+                                    $icone = '<i class="bi bi-check-circle"></i>';
                                 } elseif ($dateDebut <= $maintenant && $dateFin > $maintenant) {
                                     $statut = 'En cours';
                                     $couleur = 'success';
-                                    $icone = '🏨';
+                                    $icone = '<i class="bi bi-house-door"></i>';
                                 } else {
                                     $statut = 'À venir';
                                     $couleur = 'info';
-                                    $icone = '📅';
+                                    $icone = '<i class="bi bi-calendar-event"></i>';
                                 }
                                 ?>
                                 <span class="badge bg-<?= $couleur ?> fs-6">

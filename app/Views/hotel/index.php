@@ -3,10 +3,10 @@
 <?= $this->section('content') ?>
 
 <!-- Hero Section -->
-<div class="text-white text-center py-5 mb-5 rounded-3 shadow position-relative overflow-hidden d-flex align-items-center" 
-     style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('<?= base_url('assets/images/hotel/hotelImage.png') ?>'); background-size: cover; background-position: center; min-height: 100vh;">
+<div class="text-white text-center py-5 mb-5 shadow position-relative overflow-hidden d-flex align-items-center" 
+     style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('<?= base_url('assets/images/hotel/hotelImage.png') ?>'); background-size: cover; background-position: center; height: 70vh; border-radius: 15px;">
     <div class="container py-4 position-relative" style="z-index: 1;">
-        <h1 class="display-3 fw-bold mb-4">🏨 Bienvenue à l'Hôtel CVVEN</h1>
+        <h1 class="display-3 fw-bold mb-4">Bienvenue à l'Hôtel CVVEN</h1>
         <p class="lead mb-4">Votre destination de luxe et de confort pour un séjour inoubliable</p>
         <a href="#types-section" class="btn btn-light btn-lg px-5">
             Voir nos types de chambres
@@ -33,9 +33,9 @@
             <div class="carousel-inner py-5">
                 <?php foreach ($types as $index => $type): ?>
                     <div class="carousel-item <?= $index === 0 ? 'active' : '' ?>">
-                        <div class="card border-0 shadow-lg mx-auto" style="max-width: 700px;">
+                        <div class="card border-0 shadow-lg mx-auto" style="max-width: 10000;">
                             <div class="row g-0">
-                                <div class="col-md-5">
+                                <div class="col-md-6">
                                     <?php
                                     // Chercher l'image du type (supporte .jpg, .png, .jpeg, .webp)
                                     $imagePath = '';
@@ -54,11 +54,11 @@
                                     ?>
                                     <img src="<?= $imagePath ?>" 
                                          class="img-fluid h-100 w-100" 
-                                         style="object-fit: cover; min-height: 300px;"
+                                         style="object-fit: cover; min-height: 400px;"
                                          alt="<?= esc($type['type_libelle']) ?>">
                                 </div>
-                                <div class="col-md-7">
-                                    <div class="card-body p-4 d-flex flex-column h-100">
+                                <div class="col-md-6">
+                                    <div class="card-body p-5 d-flex flex-column h-100">
                                         <div>
                                             <span class="badge bg-primary mb-3">Type de chambre</span>
                                             <h3 class="card-title fw-bold mb-3"><?= esc($type['type_libelle']) ?></h3>
@@ -68,7 +68,7 @@
                                             <button type="button" class="btn btn-primary w-100 btn-lg" 
                                                     data-bs-toggle="modal" 
                                                     data-bs-target="#dateModal<?= $type['type_id'] ?>">
-                                                📅 Vérifier la disponibilité
+                                                <i class="bi bi-calendar-check"></i> Vérifier la disponibilité
                                             </button>
                                         </div>
                                     </div>
@@ -102,7 +102,7 @@
             <div class="modal-content">
                 <div class="modal-header bg-primary text-white">
                     <h5 class="modal-title" id="dateModalLabel<?= $type['type_id'] ?>">
-                        📅 <?= esc($type['type_libelle']) ?>
+                        <i class="bi bi-calendar-check"></i> <?= esc($type['type_libelle']) ?>
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -156,7 +156,7 @@
         <div class="col-md-3 col-sm-6">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body p-4">
-                    <div class="display-4 mb-3">🛏️</div>
+                    <i class="bi bi-door-open display-4 text-primary mb-3"></i>
                     <h5 class="fw-bold">Chambres Luxueuses</h5>
                     <p class="text-muted small mb-0">Confort et élégance dans chaque chambre</p>
                 </div>
@@ -165,7 +165,7 @@
         <div class="col-md-3 col-sm-6">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body p-4">
-                    <div class="display-4 mb-3">🍽️</div>
+                    <i class="bi bi-cup-hot display-4 text-primary mb-3"></i>
                     <h5 class="fw-bold">Restaurant Gastronomique</h5>
                     <p class="text-muted small mb-0">Cuisine raffinée et service impeccable</p>
                 </div>
@@ -174,7 +174,7 @@
         <div class="col-md-3 col-sm-6">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body p-4">
-                    <div class="display-4 mb-3">🏊</div>
+                    <i class="bi bi-water display-4 text-primary mb-3"></i>
                     <h5 class="fw-bold">Piscine & Spa</h5>
                     <p class="text-muted small mb-0">Détente et bien-être toute l'année</p>
                 </div>
@@ -183,7 +183,7 @@
         <div class="col-md-3 col-sm-6">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body p-4">
-                    <div class="display-4 mb-3">📍</div>
+                    <i class="bi bi-geo-alt display-4 text-primary mb-3"></i>
                     <h5 class="fw-bold">Emplacement Idéal</h5>
                     <p class="text-muted small mb-0">Au cœur de la ville, proche de tout</p>
                 </div>

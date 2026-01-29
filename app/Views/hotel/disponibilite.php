@@ -16,7 +16,7 @@
     <div class="alert alert-info d-flex align-items-center mb-4">
         <div class="flex-grow-1">
             <?php if ($dateDebut && $dateFin): ?>
-                <h5 class="mb-2">📅 Période sélectionnée :</h5>
+                <h5 class="mb-2"><i class="bi bi-calendar-check"></i> Période sélectionnée :</h5>
                 <p class="mb-0">
                     Du <strong><?= date('d/m/Y', strtotime($dateDebut)) ?></strong> 
                     au <strong><?= date('d/m/Y', strtotime($dateFin)) ?></strong>
@@ -83,7 +83,7 @@
                             <div class="mb-3">
                                 <p class="mb-2">
                                     <span class="badge bg-light text-dark border">
-                                        📍 <?= esc($chambre['chamb_emplacement']) ?>
+                                        <i class="bi bi-geo-alt"></i> <?= esc($chambre['chamb_emplacement']) ?>
                                     </span>
                                 </p>
                                 <p class="text-muted">
