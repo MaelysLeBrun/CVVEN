@@ -86,6 +86,18 @@
             color: white;
         }
 
+        .btn-outline-primary {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            background-color: transparent;
+        }
+
+        .btn-outline-primary:hover {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+
         .btn-outline-light {
             border-color: white;
             color: white;

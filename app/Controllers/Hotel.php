@@ -64,9 +64,13 @@ class Hotel extends BaseController
                               ->get()
                               ->getRowArray();
         
+        // Récupérer tous les types de chambres pour permettre le changement
+        $allTypes = $model->getTypesChambres();
+        
         $data = [
             'chambres' => $chambresDisponibles,
             'type' => $typeInfo,
+            'allTypes' => $allTypes,
             'dateDebut' => $dateDebut,
             'dateFin' => $dateFin,
             'nombreDisponible' => count($chambresDisponibles)

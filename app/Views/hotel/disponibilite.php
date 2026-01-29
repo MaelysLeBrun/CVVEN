@@ -32,6 +32,30 @@
         </div>
     </div>
 
+    <!-- Changer de type de chambre -->
+    <?php if (!empty($allTypes) && count($allTypes) > 1): ?>
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body p-4">
+            <h5 class="mb-3 fw-bold" style="color: var(--primary-color);"><i class="bi bi-arrow-left-right"></i> Comparer avec d'autres types de chambres</h5>
+            <p class="text-muted mb-3">Consultez la disponibilité pour la même période</p>
+            <div class="d-flex flex-wrap gap-2">
+                <?php foreach ($allTypes as $t): ?>
+                    <?php if ($t['type_id'] != $type['type_id']): ?>
+                        <a href="<?= base_url('disponibilite/' . $t['type_id']) ?><?= $dateDebut && $dateFin ? '?date_debut=' . $dateDebut . '&date_fin=' . $dateFin : '' ?>" 
+                           class="btn btn-outline-primary btn-lg">
+                            <i class="bi bi-door-open"></i> <?= esc($t['type_libelle']) ?>
+                        </a>
+                    <?php else: ?>
+                        <button class="btn btn-lg" style="background-color: var(--primary-color); color: white; border-color: var(--nature-green);" disabled>
+                            <i class="bi bi-check-circle-fill"></i> <?= esc($t['type_libelle']) ?>
+                        </button>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
+
     <!-- Résultat de la disponibilité -->
     <div class="card border-0 shadow-sm mb-5">
         <div class="card-body p-4">
@@ -67,11 +91,26 @@
                 <div class="col-lg-4 col-md-6">
                     <div class="card border-0 shadow h-100">
                         <div class="position-relative overflow-hidden">
-                            <img src="<?= base_url('assets/images/chambres/chambre' . $chambre['chamb_numero'] . '.jpg') ?>" 
+                            <?php
+                            // Chercher l'image du type (supporte .jpg, .png, .jpeg, .webp)
+                            $imagePath = '';
+                            $extensions = ['jpg', 'jpeg', 'png', 'webp'];
+                            foreach ($extensions as $ext) {
+                                $checkPath = FCPATH . 'assets/images/chambres/type' . $chambre['type_id'] . '.' . $ext;
+                                if (file_exists($checkPath)) {
+                                    $imagePath = base_url('assets/images/chambres/type' . $chambre['type_id'] . '.' . $ext);
+                                    break;
+                                }
+                            }
+                            // Image par défaut si aucune trouvée
+                            if (empty($imagePath)) {
+                                $imagePath = 'https://placehold.co/600x400/2F5233/white?text=' . urlencode($chambre['type_libelle']);
+                            }
+                            ?>
+                            <img src="<?= $imagePath ?>" 
                                  class="card-img-top" 
                                  alt="Chambre <?= esc($chambre['chamb_numero']) ?>"
-                                 style="height: 250px; object-fit: cover;"
-                                 onerror="this.src='https://placehold.co/600x400/0d6efd/white?text=Chambre+<?= $chambre['chamb_numero'] ?>'">
+                                 style="height: 250px; object-fit: cover;">
                             <span class="badge bg-success position-absolute top-0 end-0 m-3 fs-6">
                                 Disponible
                             </span>
