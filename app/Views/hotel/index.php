@@ -99,9 +99,22 @@
     </div>
 </section>
 
-<!-- Modals pour sélectionner les dates par type -->
+<!-- Modals pour sélectionner les dates par type avec Alpine.js -->
 <?php foreach ($types as $type): ?>
-    <div class="modal fade" id="dateModal<?= $type['type_id'] ?>" tabindex="-1" aria-labelledby="dateModalLabel<?= $type['type_id'] ?>" aria-hidden="true">
+    <div class="modal fade" id="dateModal<?= $type['type_id'] ?>" tabindex="-1" aria-labelledby="dateModalLabel<?= $type['type_id'] ?>" aria-hidden="true" 
+         x-data="{ 
+             dateDebut: '', 
+             dateFin: '', 
+             get nuits() { 
+                 if (!this.dateDebut || !this.dateFin) return 0;
+                 const d1 = new Date(this.dateDebut);
+                 const d2 = new Date(this.dateFin);
+                 return Math.max(0, Math.ceil((d2 - d1) / (1000 * 60 * 60 * 24)));
+             },
+             get isValid() {
+                 return this.dateDebut && this.dateFin && this.nuits > 0;
+             }
+         }">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header bg-primary text-white">
@@ -116,36 +129,46 @@
                         
                         <div class="mb-3">
                             <label for="date_debut<?= $type['type_id'] ?>" class="form-label fw-bold">
-                                📆 Date d'arrivée
+                                <i class="bi bi-calendar-event"></i> Date d'arrivée
                             </label>
                             <input type="date" 
                                    class="form-control form-control-lg" 
                                    id="date_debut<?= $type['type_id'] ?>" 
                                    name="date_debut" 
+                                   x-model="dateDebut"
                                    min="<?= date('Y-m-d') ?>" 
                                    required>
                         </div>
                         
                         <div class="mb-3">
                             <label for="date_fin<?= $type['type_id'] ?>" class="form-label fw-bold">
-                                📆 Date de départ
+                                <i class="bi bi-calendar-check"></i> Date de départ
                             </label>
                             <input type="date" 
                                    class="form-control form-control-lg" 
                                    id="date_fin<?= $type['type_id'] ?>" 
                                    name="date_fin" 
-                                   min="<?= date('Y-m-d', strtotime('+1 day')) ?>" 
+                                   x-model="dateFin"
+                                   :min="dateDebut || '<?= date('Y-m-d', strtotime('+1 day')) ?>'" 
                                    required>
                         </div>
                         
+                        <!-- Affichage dynamique du nombre de nuits -->
+                        <div x-show="nuits > 0" class="alert alert-success small mb-3" x-transition>
+                            <i class="bi bi-moon-stars"></i> 
+                            <strong x-text="nuits"></strong> 
+                            <span x-text="nuits > 1 ? 'nuits' : 'nuit'"></span> sélectionnée(s)
+                        </div>
+                        
                         <div class="alert alert-info small mb-0">
-                            💡 Sélectionnez vos dates pour voir les chambres disponibles de ce type
+                            Sélectionnez vos dates pour voir les chambres disponibles de ce type
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                        <button type="submit" class="btn btn-primary px-4">
-                            Rechercher →
+                        <button type="submit" class="btn btn-primary px-4" :disabled="!isValid">
+                            <span x-show="isValid">Rechercher →</span>
+                            <span x-show="!isValid">Sélectionnez les dates</span>
                         </button>
                     </div>
                 </form>
@@ -154,20 +177,29 @@
     </div>
 <?php endforeach; ?>
 
-<!-- Features Section -->
+<!-- Features Section avec animations Alpine.js -->
 <div class="container">
-    <div class="row text-center g-4 my-5">
-        <div class="col-md-3 col-sm-6">
-            <div class="card border-0 shadow-sm h-100">
+    <div class="row text-center g-4 my-5" x-data="{ activeFeature: null }">
+        <div class="col-md-3 col-sm-6" 
+             @mouseenter="activeFeature = 1" 
+             @mouseleave="activeFeature = null">
+            <div class="card border-0 shadow-sm h-100 transition-all" 
+                 :class="activeFeature === 1 ? 'shadow-lg scale-105' : ''" 
+                 style="transition: all 0.3s ease;">
                 <div class="card-body p-4">
-                    <i class="bi bi-door-open display-4 text-primary mb-3"></i>
+                    <i class="bi bi-door-open display-4 text-primary mb-3" 
+                       :class="activeFeature === 1 ? 'animate-bounce' : ''"></i>
                     <h5 class="fw-bold">Chambres Luxueuses</h5>
                     <p class="text-muted small mb-0">Confort et élégance dans chaque chambre</p>
                 </div>
             </div>
         </div>
-        <div class="col-md-3 col-sm-6">
-            <div class="card border-0 shadow-sm h-100">
+        <div class="col-md-3 col-sm-6" 
+             @mouseenter="activeFeature = 2" 
+             @mouseleave="activeFeature = null">
+            <div class="card border-0 shadow-sm h-100 transition-all" 
+                 :class="activeFeature === 2 ? 'shadow-lg scale-105' : ''" 
+                 style="transition: all 0.3s ease;">
                 <div class="card-body p-4">
                     <i class="bi bi-cup-hot display-4 text-primary mb-3"></i>
                     <h5 class="fw-bold">Restaurant Gastronomique</h5>
@@ -175,8 +207,12 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3 col-sm-6">
-            <div class="card border-0 shadow-sm h-100">
+        <div class="col-md-3 col-sm-6" 
+             @mouseenter="activeFeature = 3" 
+             @mouseleave="activeFeature = null">
+            <div class="card border-0 shadow-sm h-100 transition-all" 
+                 :class="activeFeature === 3 ? 'shadow-lg scale-105' : ''" 
+                 style="transition: all 0.3s ease;">
                 <div class="card-body p-4">
                     <i class="bi bi-water display-4 text-primary mb-3"></i>
                     <h5 class="fw-bold">Piscine & Spa</h5>
@@ -184,8 +220,12 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3 col-sm-6">
-            <div class="card border-0 shadow-sm h-100">
+        <div class="col-md-3 col-sm-6" 
+             @mouseenter="activeFeature = 4" 
+             @mouseleave="activeFeature = null">
+            <div class="card border-0 shadow-sm h-100 transition-all" 
+                 :class="activeFeature === 4 ? 'shadow-lg scale-105' : ''" 
+                 style="transition: all 0.3s ease;">
                 <div class="card-body p-4">
                     <i class="bi bi-geo-alt display-4 text-primary mb-3"></i>
                     <h5 class="fw-bold">Emplacement Idéal</h5>

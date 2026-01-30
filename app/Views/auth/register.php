@@ -5,92 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inscription - CVVEN Hôtel</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        :root {
-            --primary-color: #2F5233;
-            --primary-dark: #ebc98b;
-            --primary-light: #4A7C59;
-            --secondary-color: #3D5A40;
-            --accent-color: #C9B382;
-            --nature-green: #5A9D7A;
-            --dark-color: #1e293b;
-        }
-        
-        body {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 40px 20px;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        .register-container {
-            background: white;
-            border-radius: 20px;
-            padding: 50px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            max-width: 600px;
-            width: 100%;
-        }
-        
-        .register-container h3 {
-            color: var(--primary-color);
-            font-weight: 700;
-            margin-bottom: 10px;
-        }
-        
-        .register-container .subtitle {
-            color: #64748b;
-            margin-bottom: 30px;
-        }
-        
-        .form-control {
-            padding: 12px 15px;
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
-            transition: all 0.3s;
-        }
-        
-        .form-control:focus {
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        }
-        
-        .form-label {
-            font-weight: 600;
-            color: var(--dark-color);
-            margin-bottom: 8px;
-        }
-        
-        .btn-register {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            border: none;
-            padding: 12px;
-            border-radius: 10px;
-            font-weight: 600;
-            color: white;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        
-        .btn-register:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(47, 82, 51, 0.3);
-            background: var(--primary-dark);
-            color: var(--primary-color);
-        }
-        
-        .divider {
-            margin: 25px 0;
-            text-align: center;
-            color: #94a3b8;
-        }
-        
-        .alert {
-            border-radius: 10px;
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link href="<?= base_url('assets/css/register.css') ?>" rel="stylesheet">
 </head>
 <body>
     <div class="register-container">
@@ -122,7 +39,20 @@
                 </div>
             <?php endif; ?>
 
-            <form method="post" action="<?= site_url('register') ?>">
+            <form method="post" action="<?= site_url('register') ?>" x-data="{
+                loading: false,
+                password: '',
+                confirmPassword: '',
+                showPassword: false,
+                showConfirmPassword: false,
+                get passwordsMatch() { return this.password === this.confirmPassword && this.password.length > 0; },
+                get passwordStrength() {
+                    if (this.password.length === 0) return 0;
+                    if (this.password.length < 6) return 1;
+                    if (this.password.length < 10) return 2;
+                    return 3;
+                }
+            }" @submit="loading = true">
                 <?= csrf_field() ?>
 
                 <div class="row">
@@ -148,15 +78,45 @@
 
                 <div class="mb-3">
                     <label class="form-label">Mot de passe</label>
-                    <input type="password" name="user_mdp" class="form-control" required>
+                    <div class="position-relative">
+                        <input :type="showPassword ? 'text' : 'password'" name="user_mdp" x-model="password" class="form-control" required>
+                        <button type="button" @click="showPassword = !showPassword" class="btn btn-link position-absolute" style="right: 5px; top: 50%; transform: translateY(-50%); text-decoration: none;">
+                            <i :class="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+                        </button>
+                    </div>
+                    <!-- Indicateur de force du mot de passe -->
+                    <div x-show="password.length > 0" class="mt-2">
+                        <div class="progress" style="height: 5px;">
+                            <div class="progress-bar" :class="{
+                                'bg-danger': passwordStrength === 1,
+                                'bg-warning': passwordStrength === 2,
+                                'bg-success': passwordStrength === 3
+                            }" :style="'width: ' + (passwordStrength * 33.33) + '%'"></div>
+                        </div>
+                        <small x-text="passwordStrength === 1 ? 'Faible' : passwordStrength === 2 ? 'Moyen' : 'Fort'" :class="{
+                            'text-danger': passwordStrength === 1,
+                            'text-warning': passwordStrength === 2,
+                            'text-success': passwordStrength === 3
+                        }"></small>
+                    </div>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label">Confirmer le mot de passe</label>
-                    <input type="password" name="user_mdp_confirm" class="form-control" required>
+                    <div class="position-relative">
+                        <input :type="showConfirmPassword ? 'text' : 'password'" name="user_mdp_confirm" x-model="confirmPassword" class="form-control" required>
+                        <button type="button" @click="showConfirmPassword = !showConfirmPassword" class="btn btn-link position-absolute" style="right: 5px; top: 50%; transform: translateY(-50%); text-decoration: none;">
+                            <i :class="showConfirmPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+                        </button>
+                    </div>
+                    <small x-show="confirmPassword.length > 0" :class="passwordsMatch ? 'text-success' : 'text-danger'" x-text="passwordsMatch ? '✓ Les mots de passe correspondent' : '✗ Les mots de passe ne correspondent pas'"></small>
                 </div>
 
-                <button class="btn btn-register w-100">S'inscrire</button>
+                <button class="btn btn-register w-100" :disabled="loading || !passwordsMatch">
+                    <span x-show="!loading">S'inscrire</span>
+                    <span x-show="loading" class="spinner-border spinner-border-sm me-2"></span>
+                    <span x-show="loading">Inscription...</span>
+                </button>
             </form>
 
             <div class="divider">
@@ -169,5 +129,6 @@
         </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="<?= base_url('assets/js/app.js') ?>"></script>
 </body>
 </html>
