@@ -33,6 +33,7 @@ class UserModel extends Model
      * @var array<string>
      */
     protected $allowedFields = [
+        'user_id',
         'user_login',
         'user_mdp',
         'user_nom',

@@ -124,6 +124,13 @@ class LoginController extends BaseController
 
         $model->insert($data);
         $id = $model->getInsertID();
+        
+        // Générer le user_id au format USR001, USR002, etc.
+        $formattedUserId = 'USR' . str_pad($id, 3, '0', STR_PAD_LEFT);
+        
+        // Mettre à jour le user_id avec le format généré
+        $model->update($id, ['user_id' => $formattedUserId]);
+        
         $user = $model->find($id);
 
         $session->set([
