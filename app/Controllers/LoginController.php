@@ -90,7 +90,12 @@ class LoginController extends BaseController
         ];
 
         if (!$this->validate($rules)) {
-            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+            $errors = $this->validator->getErrors();
+            // Personnaliser le message d'erreur pour l'email
+            if (isset($errors['user_mail'])) {
+                $errors['user_mail'] = 'Cette adresse mail est déjà utilisée';
+            }
+            return redirect()->back()->withInput()->with('errors', $errors);
         }
 
         // Générer le login : première lettre du prénom + nom de famille
@@ -122,16 +127,20 @@ class LoginController extends BaseController
             'user_telephone' => $this->request->getPost('user_telephone')
         ];
 
+        // Générer le user_id au format USR001, USR002, etc. AVANT insertion
+        $lastUser = $model->selectMax('user_id')->first();
+        $nextNumber = 1;
+        
+        if ($lastUser && $lastUser['user_id']) {
+            $lastNumber = (int)substr($lastUser['user_id'], 3);
+            $nextNumber = $lastNumber + 1;
+        }
+        
+        $data['user_id'] = 'USR' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+        
         $model->insert($data);
-        $id = $model->getInsertID();
         
-        // Générer le user_id au format USR001, USR002, etc.
-        $formattedUserId = 'USR' . str_pad($id, 3, '0', STR_PAD_LEFT);
-        
-        // Mettre à jour le user_id avec le format généré
-        $model->update($id, ['user_id' => $formattedUserId]);
-        
-        $user = $model->find($id);
+        $user = $model->where('user_login', $login)->first();
 
         $session->set([
             'user_id'    => $user['user_id'],
