@@ -1,172 +1,334 @@
+/* ================================================================
+   CVVEN — Page de Connexion
+   Thème : Chalet Alpin de Prestige
+   ================================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600&display=swap');
+
 :root {
-    --primary-color: #2F5233;
-    --primary-dark: #ebc98b;
-    --primary-light: #4A7C59;
-    --secondary-color: #3D5A40;
-    --accent-color: #C9B382;
-    --nature-green: #5A9D7A;
-    --dark-color: #1e293b;
-    --bg-light: #e8e3d8;
+    --pine-deep:    #162B19;
+    --pine:         #2A4A2E;
+    --pine-mid:     #3A6341;
+    --birch:        #C9B07A;
+    --birch-light:  #E8D8A8;
+    --bark:         #6B4226;
+    --snow:         #F8F5EE;
+    --fog:          #EDE8DC;
+    --mist:         #DDD8CD;
+    --charcoal:     #2C2416;
+    --ember:        #B8860B;
+    --smoke:        #7A7265;
 }
 
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
 body {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    font-family: 'Outfit', system-ui, sans-serif;
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 20px;
+    position: relative;
+    background-color: var(--pine-deep);
 }
 
+/* Mountain atmosphere background */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+        radial-gradient(ellipse 80% 60% at 20% 90%, rgba(42,74,46,0.5) 0%, transparent 55%),
+        radial-gradient(ellipse 60% 50% at 80% 10%, rgba(22,43,25,0.7) 0%, transparent 50%),
+        url('https://images.unsplash.com/photo-1531316282893-bca1b66af6f1?auto=format&fit=crop&w=1600&q=70') center/cover no-repeat;
+    opacity: 0.38;
+    z-index: 0;
+}
+
+/* ── Container ─────────────────────────────────────────────────── */
 .login-container {
-    background: white;
+    position: relative;
+    z-index: 1;
+    background: var(--snow);
     border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 28px 90px rgba(0, 0, 0, 0.55);
     display: flex;
-    max-width: 1000px;
-    width: 90%;
-    min-height: 600px;
+    max-width: 960px;
+    width: 100%;
+    min-height: 580px;
 }
 
+/* ── Image Panel ───────────────────────────────────────────────── */
 .login-image {
-    flex: 1;
-    background: url('https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80') center/cover;
+    flex: 1.1;
+    background:
+        url('https://images.unsplash.com/photo-1582642590223-e38d7e68df5f?auto=format&fit=crop&w=800&q=80')
+        center/cover no-repeat;
     position: relative;
 }
 
 .login-image::before {
     content: '';
     position: absolute;
+    inset: 0;
+    background: linear-gradient(160deg,
+        rgba(22,43,25,0.72) 0%,
+        rgba(42,74,46,0.82) 60%,
+        rgba(22,43,25,0.9) 100%);
+}
+
+/* Decorative top bar */
+.login-image::after {
+    content: '';
+    position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    bottom: 0;
-    background: linear-gradient(45deg, rgba(47, 82, 51, 0.85), rgba(90, 157, 122, 0.7));
+    height: 3px;
+    background: linear-gradient(90deg, var(--birch), var(--ember), var(--birch));
 }
 
 .login-image-content {
     position: relative;
     z-index: 1;
-    color: white;
-    padding: 60px 40px;
+    color: #fff;
+    padding: 52px 48px;
     height: 100%;
     display: flex;
     flex-direction: column;
+    justify-content: flex-end;
+    gap: 0;
+}
+
+.login-image-content .brand-logo {
+    width: 52px;
+    height: 52px;
+    background: linear-gradient(135deg, var(--birch), var(--ember));
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
     justify-content: center;
-}
-
-.login-image-content h1 {
-    font-size: 2.5rem;
-    font-weight: 700;
+    font-size: 1.4rem;
+    color: var(--pine-deep);
     margin-bottom: 20px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
 }
 
-.login-image-content p {
-    font-size: 1.1rem;
-    opacity: 0.95;
+.login-image-content .brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--birch-light);
+    line-height: 1;
+    margin-bottom: 6px;
+    letter-spacing: 0.04em;
 }
 
+.login-image-content .brand-tag {
+    font-size: 0.7rem;
+    font-weight: 400;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+}
+
+.login-image-content .brand-desc {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.75;
+    max-width: 280px;
+    font-weight: 300;
+}
+
+/* ── Form Panel ────────────────────────────────────────────────── */
 .login-form {
-    flex: 1;
-    padding: 60px 50px;
+    flex: 0 0 380px;
+    padding: 56px 48px;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    background-color: var(--snow);
+    border-left: 1px solid var(--mist);
 }
 
 .login-form h3 {
-    color: var(--primary-color);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.2rem;
     font-weight: 700;
-    margin-bottom: 10px;
+    color: var(--pine-deep);
+    margin-bottom: 4px;
+    line-height: 1;
 }
 
 .login-form .subtitle {
-    color: #64748b;
-    margin-bottom: 30px;
+    color: var(--smoke);
+    font-size: 0.875rem;
+    margin-bottom: 32px;
+    font-weight: 300;
+}
+
+/* ── Form Elements ─────────────────────────────────────────────── */
+.form-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--smoke);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 6px;
+    display: block;
 }
 
 .form-control {
-    padding: 12px 15px;
-    border: 2px solid #e2e8f0;
-    border-radius: 10px;
-    transition: all 0.3s;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1.5px solid var(--mist);
+    border-radius: 8px;
+    background-color: var(--fog);
+    color: var(--charcoal);
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.95rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: block;
 }
 
 .form-control:focus {
-    border-color: var(--secondary-color);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    border-color: var(--pine-mid);
+    box-shadow: 0 0 0 3px rgba(58, 99, 65, 0.13);
+    background-color: #fff;
+    outline: none;
 }
 
-.form-label {
-    font-weight: 600;
-    color: var(--dark-color);
-    margin-bottom: 8px;
-}
+.form-control::placeholder { color: #b0a89e; }
 
+/* ── Buttons ───────────────────────────────────────────────────── */
 .btn-login {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    width: 100%;
+    background: linear-gradient(135deg, var(--pine) 0%, var(--pine-mid) 100%);
     border: none;
-    padding: 12px;
-    border-radius: 10px;
+    padding: 0.85rem 1rem;
+    border-radius: 8px;
+    font-family: 'Outfit', sans-serif;
     font-weight: 600;
-    color: white;
-    transition: transform 0.2s, box-shadow 0.2s;
+    font-size: 0.95rem;
+    color: #fff;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 
 .btn-login:hover {
+    background: linear-gradient(135deg, var(--pine-mid) 0%, var(--pine-deep) 100%);
     transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(47, 82, 51, 0.3);
-    background: var(--primary-dark);
-    color: var(--primary-color);
+    box-shadow: 0 10px 28px rgba(22, 43, 25, 0.35);
+    color: var(--birch-light);
+}
+
+.btn-login:disabled {
+    opacity: 0.65;
+    transform: none;
+    cursor: not-allowed;
 }
 
 .btn-register {
-    border: 2px solid var(--accent-color);
-    color: var(--primary-color);
-    padding: 12px;
-    border-radius: 10px;
-    font-weight: 600;
+    width: 100%;
+    background: transparent;
+    border: 1.5px solid var(--birch);
+    padding: 0.82rem 1rem;
+    border-radius: 8px;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: var(--pine);
+    letter-spacing: 0.04em;
+    cursor: pointer;
     transition: all 0.3s;
+    text-align: center;
+    text-decoration: none;
+    display: block;
 }
 
 .btn-register:hover {
-    background: var(--accent-color);
-    color: var(--primary-color);
+    background: var(--birch);
+    color: var(--pine-deep);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(201,176,122,0.3);
 }
 
+/* ── Divider ───────────────────────────────────────────────────── */
 .divider {
     text-align: center;
-    margin: 25px 0;
-    color: #94a3b8;
+    margin: 22px 0;
+    color: #b0a89e;
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
     position: relative;
 }
 
-.divider::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 50%;
-    width: 45%;
-    height: 1px;
-    background: #e2e8f0;
-}
-
+.divider::before,
 .divider::after {
     content: '';
     position: absolute;
-    right: 0;
     top: 50%;
-    width: 45%;
+    width: 43%;
     height: 1px;
-    background: #e2e8f0;
+    background: var(--mist);
+}
+.divider::before { left: 0; }
+.divider::after  { right: 0; }
+
+/* ── Alerts ────────────────────────────────────────────────────── */
+.alert {
+    border-radius: 8px;
+    font-size: 0.875rem;
+    padding: 0.8rem 1rem;
+    margin-bottom: 1.25rem;
+    border-left-width: 4px;
 }
 
+.alert-info {
+    background: rgba(201,176,122,0.1);
+    border-color: var(--birch);
+    color: var(--bark);
+}
+
+.alert-danger {
+    background: #fff0f0;
+    border-color: #c0392b;
+    color: #922b21;
+}
+
+.alert-dismissible .btn-close { padding: 0.75rem 1rem; }
+
+/* ── Back link ─────────────────────────────────────────────────── */
+.back-link {
+    color: var(--smoke);
+    font-size: 0.82rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: color 0.3s;
+    margin-top: 4px;
+}
+
+.back-link:hover { color: var(--pine-mid); }
+
+/* ── Responsive ────────────────────────────────────────────────── */
 @media (max-width: 768px) {
-    .login-image {
-        display: none;
-    }
-    .login-container {
-        max-width: 500px;
-    }
+    .login-image { display: none; }
+    .login-form  { flex: 1; padding: 48px 32px; }
+    .login-container { min-height: unset; }
+    body { padding: 16px; }
+}
+
+@media (max-width: 480px) {
+    .login-form { padding: 40px 24px; }
 }

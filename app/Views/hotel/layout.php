@@ -3,128 +3,221 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CVVEN Hôtel</title>
+    <title>CVVEN — Villages de Vacances</title>
     <link rel="icon" type="image/png" href="<?= base_url('assets/images/hotel/hotelLogo.png') ?>">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- CVVEN Theme -->
     <link href="<?= base_url('assets/css/layout.css') ?>" rel="stylesheet">
 </head>
-<body class="bg-light">
-    <!-- HEADER -->
+<body>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         NAVIGATION
+    ═══════════════════════════════════════════════════════════ -->
     <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <nav class="navbar navbar-expand-lg navbar-dark">
             <div class="container">
-                <a class="navbar-brand fw-bold" href="<?= base_url('/') ?>">
-                    <i class="bi bi-hotel"></i> CVVEN Hôtel
+
+                <!-- Brand -->
+                <a class="navbar-brand" href="<?= base_url('/') ?>">
+                    <div class="brand-icon">
+                        <i class="bi bi-house-heart"></i>
+                    </div>
+                    <div class="brand-text">
+                        <span class="brand-abbr">CVVEN</span>
+                        <span class="brand-full">Villages de Vacances · Éducation Nationale</span>
+                    </div>
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+
+                <!-- Toggler -->
+                <button class="navbar-toggler border-0" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+
+                <!-- Links -->
                 <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto align-items-lg-center">
+                    <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-1">
                         <?php if (session()->get('isLoggedIn')): ?>
                             <li class="nav-item">
-                                <span class="nav-link text-white opacity-75">
-                                    <i class="bi bi-person-circle"></i> <strong><?= esc(session()->get('user_login')) ?></strong>
+                                <span class="nav-link nav-user-name">
+                                    <i class="bi bi-person-circle me-1"></i><?= esc(session()->get('user_login')) ?>
                                 </span>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="<?= base_url('reservation') ?>">
-                                    <i class="bi bi-calendar-plus"></i> Réserver
+                                    <i class="bi bi-calendar-plus me-1"></i>Réserver
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="<?= base_url('mes-reservations') ?>">
-                                    <i class="bi bi-calendar-check"></i> Mes réservations
+                                    <i class="bi bi-calendar-check me-1"></i>Mes réservations
                                 </a>
                             </li>
-                            <li class="nav-item ms-2">
-                                <a class="nav-link btn btn-outline-light btn-sm px-3" href="<?= base_url('logout') ?>">
-                                    <i class="bi bi-box-arrow-right"></i> Déconnexion
+                            <li class="nav-item ms-lg-2">
+                                <a class="nav-link btn btn-outline-light btn-sm px-3 py-2"
+                                   href="<?= base_url('logout') ?>">
+                                    <i class="bi bi-box-arrow-right me-1"></i>Déconnexion
                                 </a>
                             </li>
                         <?php else: ?>
                             <li class="nav-item">
-                                <a class="nav-link btn btn-outline-light btn-sm px-3" href="<?= base_url('login') ?>">
-                                    <i class="bi bi-box-arrow-in-right"></i> Connexion
+                                <a class="nav-link" href="<?= base_url('/') ?>">
+                                    <i class="bi bi-house me-1"></i>Accueil
+                                </a>
+                            </li>
+                            <li class="nav-item ms-lg-2">
+                                <a class="nav-link btn btn-outline-light btn-sm px-3 py-2"
+                                   href="<?= base_url('login') ?>">
+                                    <i class="bi bi-box-arrow-in-right me-1"></i>Connexion
                                 </a>
                             </li>
                         <?php endif; ?>
                     </ul>
                 </div>
+
             </div>
         </nav>
     </header>
 
-    <!-- FLASH MESSAGES GLOBAUX -->
+    <!-- ═══════════════════════════════════════════════════════════
+         FLASH MESSAGES
+    ═══════════════════════════════════════════════════════════ -->
     <?php if (session()->getFlashdata('success') || session()->getFlashdata('erreur') || session()->getFlashdata('message')): ?>
     <div class="container mt-3">
         <?php if (session()->getFlashdata('success')): ?>
             <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <i class="bi bi-check-circle"></i> <?= session()->getFlashdata('success') ?>
+                <i class="bi bi-check-circle me-2"></i><?= session()->getFlashdata('success') ?>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         <?php endif; ?>
         <?php if (session()->getFlashdata('erreur')): ?>
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <i class="bi bi-exclamation-triangle"></i> <?= session()->getFlashdata('erreur') ?>
+                <i class="bi bi-exclamation-triangle me-2"></i><?= session()->getFlashdata('erreur') ?>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         <?php endif; ?>
         <?php if (session()->getFlashdata('message')): ?>
             <div class="alert alert-info alert-dismissible fade show" role="alert">
-                <i class="bi bi-info-circle"></i> <?= session()->getFlashdata('message') ?>
+                <i class="bi bi-info-circle me-2"></i><?= session()->getFlashdata('message') ?>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         <?php endif; ?>
     </div>
     <?php endif; ?>
 
-    <!-- MAIN CONTENT -->
-    <main class="py-4">
-        <div class="container">
-            <?= $this->renderSection('content') ?>
-        </div>
+    <!-- ═══════════════════════════════════════════════════════════
+         MAIN CONTENT
+    ═══════════════════════════════════════════════════════════ -->
+    <main>
+        <?= $this->renderSection('content') ?>
     </main>
 
-    <!-- FOOTER -->
+    <!-- ═══════════════════════════════════════════════════════════
+         FOOTER
+    ═══════════════════════════════════════════════════════════ -->
     <footer class="mt-auto">
-        <div class="container py-4">
-            <div class="row">
-                <div class="col-md-4 mb-3">
-                    <h5>CVVEN Hôtel</h5>
-                    <p class="text-muted small">Votre hôtel de confiance pour vos séjours.</p>
+        <!-- Mountain silhouette decoration -->
+        <svg class="footer-mountain" viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+            <path d="M0,80 L0,55 L80,28 L160,50 L240,18 L320,42 L400,8 L480,38 L560,5 L640,35 L720,12 L800,40 L880,6 L960,38 L1040,15 L1120,44 L1200,22 L1280,48 L1360,20 L1440,45 L1440,80 Z" fill="currentColor"/>
+        </svg>
+
+        <div class="container py-5 position-relative">
+            <div class="row g-4">
+
+                <!-- Brand column -->
+                <div class="col-md-4">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <div class="brand-icon" style="width:36px;height:36px;background:linear-gradient(135deg,#C9B07A,#B8860B);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#162B19;font-size:1rem;">
+                            <i class="bi bi-house-heart"></i>
+                        </div>
+                        <span style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:700;color:#E8D8A8;">CVVEN</span>
+                    </div>
+                    <p style="color:rgba(255,255,255,0.5);font-size:0.82rem;line-height:1.7;max-width:240px;">
+                        Comité pour les Villages de Vacances de l'Éducation Nationale — Des séjours montagne d'exception.
+                    </p>
                 </div>
-                <div class="col-md-4 mb-3">
+
+                <!-- Navigation -->
+                <div class="col-md-4">
                     <h5>Navigation</h5>
-                    <ul class="list-unstyled small">
-                        <li><a href="<?= base_url('/') ?>" class="text-decoration-none">Accueil</a></li>
+                    <ul class="list-unstyled">
+                        <li class="mb-1">
+                            <a href="<?= base_url('/') ?>">
+                                <i class="bi bi-house me-2" style="font-size:0.7rem;"></i>Accueil
+                            </a>
+                        </li>
                         <?php if (session()->get('isLoggedIn')): ?>
-                            <li><a href="<?= base_url('reservation') ?>" class="text-decoration-none">Réserver</a></li>
-                            <li><a href="<?= base_url('mes-reservations') ?>" class="text-decoration-none">Mes réservations</a></li>
+                            <li class="mb-1">
+                                <a href="<?= base_url('reservation') ?>">
+                                    <i class="bi bi-calendar-plus me-2" style="font-size:0.7rem;"></i>Réserver
+                                </a>
+                            </li>
+                            <li class="mb-1">
+                                <a href="<?= base_url('mes-reservations') ?>">
+                                    <i class="bi bi-calendar-check me-2" style="font-size:0.7rem;"></i>Mes réservations
+                                </a>
+                            </li>
                         <?php else: ?>
-                            <li><a href="<?= base_url('login') ?>" class="text-decoration-none">Connexion</a></li>
-                            <li><a href="<?= base_url('register') ?>" class="text-decoration-none">Inscription</a></li>
+                            <li class="mb-1">
+                                <a href="<?= base_url('login') ?>">
+                                    <i class="bi bi-box-arrow-in-right me-2" style="font-size:0.7rem;"></i>Connexion
+                                </a>
+                            </li>
+                            <li class="mb-1">
+                                <a href="<?= base_url('register') ?>">
+                                    <i class="bi bi-person-plus me-2" style="font-size:0.7rem;"></i>Créer un compte
+                                </a>
+                            </li>
                         <?php endif; ?>
                     </ul>
                 </div>
-                <div class="col-md-4 mb-3">
+
+                <!-- Contact -->
+                <div class="col-md-4">
                     <h5>Contact</h5>
-                    <p class="text-muted small">
-                        Email: info@cvven.fr<br>
-                        Téléphone: +33 1 23 45 67 89
-                    </p>
+                    <ul class="list-unstyled" style="color:rgba(255,255,255,0.5);font-size:0.875rem;">
+                        <li class="mb-2">
+                            <i class="bi bi-envelope me-2" style="color:#C9B07A;"></i>
+                            <a href="mailto:info@cvven.fr">info@cvven.fr</a>
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-telephone me-2" style="color:#C9B07A;"></i>
+                            +33 1 23 45 67 89
+                        </li>
+                        <li>
+                            <i class="bi bi-geo-alt me-2" style="color:#C9B07A;"></i>
+                            Villages des Alpes, France
+                        </li>
+                    </ul>
                 </div>
+
             </div>
+
             <hr>
-            <div class="text-center text-muted small">
-                <p>&copy; 2026 CVVEN Hôtel. Tous droits réservés.</p>
+
+            <div class="text-center footer-bottom">
+                &copy; <?= date('Y') ?> CVVEN — Comité pour les Villages de Vacances de l'Éducation Nationale.
+                Tous droits réservés.
             </div>
         </div>
     </footer>
 
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="<?= base_url('assets/js/app.js') ?>"></script>
+
 </body>
 </html>

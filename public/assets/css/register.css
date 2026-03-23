@@ -1,84 +1,263 @@
+/* ================================================================
+   CVVEN — Page d'Inscription
+   Thème : Chalet Alpin de Prestige
+   ================================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600&display=swap');
+
 :root {
-    --primary-color: #2F5233;
-    --primary-dark: #ebc98b;
-    --primary-light: #4A7C59;
-    --secondary-color: #3D5A40;
-    --accent-color: #C9B382;
-    --nature-green: #5A9D7A;
-    --dark-color: #1e293b;
+    --pine-deep:    #162B19;
+    --pine:         #2A4A2E;
+    --pine-mid:     #3A6341;
+    --birch:        #C9B07A;
+    --birch-light:  #E8D8A8;
+    --bark:         #6B4226;
+    --snow:         #F8F5EE;
+    --fog:          #EDE8DC;
+    --mist:         #DDD8CD;
+    --charcoal:     #2C2416;
+    --ember:        #B8860B;
+    --smoke:        #7A7265;
 }
 
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
 body {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    font-family: 'Outfit', system-ui, sans-serif;
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 40px 20px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 32px 20px;
+    position: relative;
+    background-color: var(--pine-deep);
 }
 
+/* Mountain night sky background */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+        radial-gradient(ellipse 70% 60% at 70% 80%, rgba(42,74,46,0.55) 0%, transparent 50%),
+        url('https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1600&q=70')
+        center/cover no-repeat;
+    opacity: 0.38;
+    z-index: 0;
+}
+
+/* ── Card container ────────────────────────────────────────────── */
 .register-container {
-    background: white;
+    position: relative;
+    z-index: 1;
+    background: var(--snow);
     border-radius: 20px;
-    padding: 50px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    max-width: 600px;
+    padding: 48px 52px;
+    box-shadow: 0 28px 90px rgba(0, 0, 0, 0.55);
+    max-width: 580px;
     width: 100%;
 }
 
+/* Color accent bar on top */
+.register-container::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--pine) 0%, var(--birch) 50%, var(--pine-mid) 100%);
+    border-radius: 20px 20px 0 0;
+}
+
+/* ── Header ────────────────────────────────────────────────────── */
 .register-container h3 {
-    color: var(--primary-color);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.2rem;
     font-weight: 700;
-    margin-bottom: 10px;
+    color: var(--pine-deep);
+    margin-bottom: 4px;
+    line-height: 1;
 }
 
 .register-container .subtitle {
-    color: #64748b;
-    margin-bottom: 30px;
+    color: var(--smoke);
+    font-size: 0.875rem;
+    margin-bottom: 28px;
+    font-weight: 300;
 }
 
+/* ── Form elements ─────────────────────────────────────────────── */
+.form-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--smoke);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.mb-3 { margin-bottom: 1rem; }
+.mb-4 { margin-bottom: 1.4rem; }
+
 .form-control {
-    padding: 12px 15px;
-    border: 2px solid #e2e8f0;
-    border-radius: 10px;
-    transition: all 0.3s;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1.5px solid var(--mist);
+    border-radius: 8px;
+    background-color: var(--fog);
+    color: var(--charcoal);
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.95rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: block;
 }
 
 .form-control:focus {
-    border-color: var(--secondary-color);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    border-color: var(--pine-mid);
+    box-shadow: 0 0 0 3px rgba(58, 99, 65, 0.13);
+    background-color: #fff;
+    outline: none;
 }
 
-.form-label {
-    font-weight: 600;
-    color: var(--dark-color);
-    margin-bottom: 8px;
+.form-control::placeholder { color: #b0a89e; }
+
+/* ── Row layout ────────────────────────────────────────────────── */
+.row {
+    display: flex;
+    gap: 0;
+    margin-left: -8px;
+    margin-right: -8px;
 }
 
+.row .col {
+    flex: 1;
+    padding: 0 8px;
+}
+
+/* ── Progress bar ──────────────────────────────────────────────── */
+.progress {
+    height: 5px;
+    background-color: var(--mist);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-bar { border-radius: 4px; transition: width 0.4s; }
+.bg-danger  { background-color: #e74c3c !important; }
+.bg-warning { background-color: var(--ember) !important; }
+.bg-success { background-color: var(--pine-light) !important; }
+
+.text-danger  { color: #e74c3c !important; }
+.text-warning { color: var(--ember) !important; }
+.text-success { color: var(--pine-light) !important; }
+
+/* ── Main button ───────────────────────────────────────────────── */
 .btn-register {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    width: 100%;
+    background: linear-gradient(135deg, var(--pine) 0%, var(--pine-mid) 100%);
     border: none;
-    padding: 12px;
-    border-radius: 10px;
+    padding: 0.85rem 1rem;
+    border-radius: 8px;
+    font-family: 'Outfit', sans-serif;
     font-weight: 600;
-    color: white;
-    transition: transform 0.2s, box-shadow 0.2s;
+    font-size: 0.95rem;
+    color: #fff;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: block;
+    text-align: center;
+    margin-top: 4px;
 }
 
 .btn-register:hover {
+    background: linear-gradient(135deg, var(--pine-mid) 0%, var(--pine-deep) 100%);
     transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(47, 82, 51, 0.3);
-    background: var(--primary-dark);
-    color: var(--primary-color);
+    box-shadow: 0 10px 28px rgba(22, 43, 25, 0.35);
+    color: var(--birch-light);
 }
 
+.btn-register:disabled {
+    opacity: 0.55;
+    transform: none;
+    cursor: not-allowed;
+}
+
+/* ── Divider ───────────────────────────────────────────────────── */
 .divider {
-    margin: 25px 0;
     text-align: center;
-    color: #94a3b8;
+    margin: 20px 0 16px;
+    color: var(--smoke);
+    font-size: 0.82rem;
+    letter-spacing: 0.04em;
 }
 
+/* ── Login link ────────────────────────────────────────────────── */
+.login-link {
+    color: var(--pine-mid);
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s;
+}
+
+.login-link:hover { color: var(--birch); }
+
+/* ── Alerts ────────────────────────────────────────────────────── */
 .alert {
-    border-radius: 10px;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    padding: 0.8rem 1rem;
+    margin-bottom: 1.25rem;
+    border-left-width: 4px;
+}
+
+.alert-info {
+    background: rgba(201,176,122,0.1);
+    border-color: var(--birch);
+    color: var(--bark);
+}
+
+.alert-danger {
+    background: #fff0f0;
+    border-color: #c0392b;
+    color: #922b21;
+}
+
+.alert ul {
+    margin: 0;
+    padding-left: 1.2rem;
+}
+
+/* ── Spinner ───────────────────────────────────────────────────── */
+.spinner-border-sm {
+    width: 0.9rem;
+    height: 0.9rem;
+    border-width: 0.15em;
+}
+
+/* ── Password visibility button ────────────────────────────────── */
+.position-relative { position: relative; }
+.position-absolute { position: absolute; }
+
+.btn-link {
+    color: var(--smoke);
+    border: none;
+    background: transparent;
+    text-decoration: none;
+    padding: 0.25rem 0.5rem;
+    transition: color 0.3s;
+}
+
+.btn-link:hover { color: var(--pine); }
+
+/* ── Responsive ────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+    .register-container { padding: 40px 28px; }
+    .row { flex-direction: column; }
+    .row .col { padding: 0; }
+}
+
+@media (max-width: 480px) {
+    .register-container { padding: 36px 20px; }
 }
