@@ -2,9 +2,8 @@
 
 <?= $this->section('content') ?>
 
-<div class="container py-4">
-    <!-- En-tête -->
-    <div class="mb-5">
+<!-- En-tête -->
+<div class="mb-4">
         <a href="<?= base_url('/') ?>" class="btn btn-outline-secondary mb-3">
             ← Retour à l'accueil
         </a>
@@ -130,7 +129,7 @@
                                 </p>
                             </div>
                             <div class="mt-auto">
-                                <a href="<?= base_url('chambre/' . $chambre['chamb_id']) ?><?= $dateDebut && $dateFin ? '?date_debut=' . $dateDebut . '&date_fin=' . $dateFin : '' ?>" 
+                                <a href="<?= base_url('reservation?chamb_id=' . $chambre['chamb_id'] . ($dateDebut && $dateFin ? '&date_debut=' . $dateDebut . '&date_fin=' . $dateFin : '')) ?>"
                                    class="btn btn-primary w-100">
                                     Réserver cette chambre
                                 </a>
@@ -157,7 +156,6 @@
             </a>
         </div>
     <?php endif; ?>
-</div>
 
 <!-- Modal pour modifier les dates -->
 <div class="modal fade" id="changeDateModal" tabindex="-1" aria-labelledby="changeDateModalLabel" aria-hidden="true">

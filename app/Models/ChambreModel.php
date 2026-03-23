@@ -28,10 +28,16 @@ class ChambreModel extends Model
     protected $primaryKey = 'chamb_id';
     
     /**
+     * Indique si la clé primaire est auto-incrementée
+     * @var bool
+     */
+    protected $useAutoIncrement = false;
+    
+    /**
      * Champs autorisés pour l'insertion et la mise à jour
      * @var array<string>
      */
-    protected $allowedFields = ['chamb_emplacement', 'chamb_numero', 'chamb_remarque', 'type_id'];
+    protected $allowedFields = ['chamb_id', 'chamb_numero', 'chamb_emplacement', 'chamb_remarque', 'type_id'];
     
     /**
      * Type de retour des résultats
@@ -123,5 +129,21 @@ class ChambreModel extends Model
         }
 
         return $builder->findAll();
+    }
+
+    /**
+     * Récupère les détails d'une chambre avec son type par identifiant de chambre
+     * 
+     * @param int|string $chamb_id Identifiant de la chambre
+     * @return array<string,mixed>|null Détails de la chambre avec type ou null si non trouvée
+     */
+    public function getChambreWithType($chamb_id)
+    {
+        return $this->db->table('Chambre c')
+            ->select('c.*, t.type_libelle, t.type_desc')
+            ->join('Type_Chambre t', 't.type_id = c.type_id')
+            ->where('c.chamb_id', $chamb_id)
+            ->get()
+            ->getRowArray();
     }
 }

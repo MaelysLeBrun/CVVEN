@@ -23,7 +23,10 @@ class LoginController extends BaseController
      */
     public function login()
     {
-        // juste pour tester la vue, sans session ni POST
+        if (session()->get('isLoggedIn')) {
+            return redirect()->to('/');
+        }
+
         return view('auth/login');
     }
 

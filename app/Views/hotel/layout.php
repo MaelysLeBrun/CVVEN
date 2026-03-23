@@ -22,27 +22,32 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto">
+                    <ul class="navbar-nav ms-auto align-items-lg-center">
                         <?php if (session()->get('isLoggedIn')): ?>
                             <li class="nav-item">
-                                <span class="nav-link text-white">
-                                    Bienvenue, <strong><?= esc(session()->get('user_login')) ?></strong>
+                                <span class="nav-link text-white opacity-75">
+                                    <i class="bi bi-person-circle"></i> <strong><?= esc(session()->get('user_login')) ?></strong>
                                 </span>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="<?= base_url('/mes-reservations') ?>">
-                                    Mes réservations
+                                <a class="nav-link" href="<?= base_url('reservation') ?>">
+                                    <i class="bi bi-calendar-plus"></i> Réserver
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link btn btn-outline-light btn-sm ms-2" href="<?= base_url('/logout') ?>">
-                                    Déconnexion
+                                <a class="nav-link" href="<?= base_url('mes-reservations') ?>">
+                                    <i class="bi bi-calendar-check"></i> Mes réservations
+                                </a>
+                            </li>
+                            <li class="nav-item ms-2">
+                                <a class="nav-link btn btn-outline-light btn-sm px-3" href="<?= base_url('logout') ?>">
+                                    <i class="bi bi-box-arrow-right"></i> Déconnexion
                                 </a>
                             </li>
                         <?php else: ?>
                             <li class="nav-item">
-                                <a class="nav-link btn btn-outline-light btn-sm" href="<?= base_url('/login') ?>">
-                                    Connexion
+                                <a class="nav-link btn btn-outline-light btn-sm px-3" href="<?= base_url('login') ?>">
+                                    <i class="bi bi-box-arrow-in-right"></i> Connexion
                                 </a>
                             </li>
                         <?php endif; ?>
@@ -51,6 +56,30 @@
             </div>
         </nav>
     </header>
+
+    <!-- FLASH MESSAGES GLOBAUX -->
+    <?php if (session()->getFlashdata('success') || session()->getFlashdata('erreur') || session()->getFlashdata('message')): ?>
+    <div class="container mt-3">
+        <?php if (session()->getFlashdata('success')): ?>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle"></i> <?= session()->getFlashdata('success') ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        <?php endif; ?>
+        <?php if (session()->getFlashdata('erreur')): ?>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle"></i> <?= session()->getFlashdata('erreur') ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        <?php endif; ?>
+        <?php if (session()->getFlashdata('message')): ?>
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                <i class="bi bi-info-circle"></i> <?= session()->getFlashdata('message') ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        <?php endif; ?>
+    </div>
+    <?php endif; ?>
 
     <!-- MAIN CONTENT -->
     <main class="py-4">
@@ -71,7 +100,13 @@
                     <h5>Navigation</h5>
                     <ul class="list-unstyled small">
                         <li><a href="<?= base_url('/') ?>" class="text-decoration-none">Accueil</a></li>
-                        <li><a href="<?= base_url('/login') ?>" class="text-decoration-none">Connexion</a></li>
+                        <?php if (session()->get('isLoggedIn')): ?>
+                            <li><a href="<?= base_url('reservation') ?>" class="text-decoration-none">Réserver</a></li>
+                            <li><a href="<?= base_url('mes-reservations') ?>" class="text-decoration-none">Mes réservations</a></li>
+                        <?php else: ?>
+                            <li><a href="<?= base_url('login') ?>" class="text-decoration-none">Connexion</a></li>
+                            <li><a href="<?= base_url('register') ?>" class="text-decoration-none">Inscription</a></li>
+                        <?php endif; ?>
                     </ul>
                 </div>
                 <div class="col-md-4 mb-3">

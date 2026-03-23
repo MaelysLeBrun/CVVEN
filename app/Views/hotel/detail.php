@@ -87,61 +87,38 @@
     </div>
 
     <div class="col-md-7">
-        <div class="card">
-            <div class="card-header bg-success text-white">Réserver maintenant</div>
-            <div class="card-body">
-                
-                <?php if (session()->has('error')): ?>
-                    <div class="alert alert-danger"><?= session('error') ?></div>
+        <div class="card border-0 shadow">
+            <div class="card-header bg-primary text-white py-3">
+                <h5 class="mb-0"><i class="bi bi-calendar-plus"></i> Réserver cette chambre</h5>
+            </div>
+            <div class="card-body p-4">
+                <!-- Récapitulatif de la chambre -->
+                <div class="mb-4 p-3 rounded" style="background: rgba(47,82,51,0.07); border-left: 4px solid var(--primary-color);">
+                    <p class="mb-1"><strong>Type :</strong> <?= esc($chambre['type_libelle']) ?></p>
+                    <p class="mb-1"><strong>Chambre N° :</strong> <?= esc($chambre['chamb_numero']) ?></p>
+                    <p class="mb-0"><strong>Emplacement :</strong> <?= esc($chambre['chamb_emplacement']) ?></p>
+                </div>
+
+                <?php if ($dateDebut && $dateFin): ?>
+                    <div class="alert alert-success mb-4">
+                        <i class="bi bi-calendar-check"></i>
+                        <strong>Période sélectionnée :</strong>
+                        Du <?= date('d/m/Y', strtotime($dateDebut)) ?> au <?= date('d/m/Y', strtotime($dateFin)) ?>
+                    </div>
                 <?php endif; ?>
-                <?php if (session()->has('errors')): ?>
-                    <div class="alert alert-danger">
-                        <ul class="mb-0">
-                        <?php foreach (session('errors') as $error): ?>
-                            <li><?= esc($error) ?></li>
-                        <?php endforeach ?>
-                        </ul>
-                    </div>
-                <?php endif; ?>
 
-                <form action="<?= base_url('reserver') ?>" method="post">
-                    <?= csrf_field() ?>
-                    <input type="hidden" name="chamb_id" value="<?= esc($chambre['chamb_id']) ?>">
+                <p class="text-muted mb-4">
+                    Vos informations personnelles seront pré-remplies automatiquement depuis votre compte.
+                </p>
 
-                    <h5 class="text-primary mt-2">Vos Coordonnées</h5>
-                    <div class="row">
-                        <div class="col-6 mb-3">
-                            <label class="form-label">Nom</label>
-                            <input type="text" name="user_nom" class="form-control" required value="<?= old('user_nom') ?>">
-                        </div>
-                        <div class="col-6 mb-3">
-                            <label class="form-label">Prénom</label>
-                            <input type="text" name="user_prenom" class="form-control" required value="<?= old('user_prenom') ?>">
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Email</label>
-                        <input type="email" name="user_mail" class="form-control" required value="<?= old('user_mail') ?>">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Téléphone</label>
-                        <input type="text" name="user_telephone" class="form-control" required value="<?= old('user_telephone') ?>">
-                    </div>
+                <a href="<?= base_url('reservation?chamb_id=' . $chambre['chamb_id'] . ($dateDebut && $dateFin ? '&date_debut=' . $dateDebut . '&date_fin=' . $dateFin : '')) ?>"
+                   class="btn btn-primary btn-lg w-100">
+                    <i class="bi bi-arrow-right-circle"></i> Aller au formulaire de réservation
+                </a>
 
-                    <h5 class="text-primary mt-4">Dates du séjour</h5>
-                    <div class="row">
-                        <div class="col-6 mb-3">
-                            <label class="form-label">Arrivée</label>
-                            <input type="date" name="date_debut" class="form-control" required value="<?= old('date_debut') ?>">
-                        </div>
-                        <div class="col-6 mb-3">
-                            <label class="form-label">Départ</label>
-                            <input type="date" name="date_fin" class="form-control" required value="<?= old('date_fin') ?>">
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn btn-success w-100 btn-lg mt-3">Confirmer</button>
-                </form>
+                <a href="<?= base_url('/') ?>" class="btn btn-outline-secondary w-100 mt-2">
+                    <i class="bi bi-arrow-left"></i> Voir d'autres chambres
+                </a>
             </div>
         </div>
     </div>

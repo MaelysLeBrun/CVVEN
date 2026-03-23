@@ -103,7 +103,18 @@ class Hotel extends BaseController
             throw PageNotFoundException::forPageNotFound("Chambre introuvable : " . $id);
         }
 
-        return view('hotel/detail', ['chambre' => $chambre]);
+        $userModel = new \App\Models\UserModel();
+        $user = $userModel->find(session()->get('user_id'));
+
+        $dateDebut = $this->request->getGet('date_debut') ?? '';
+        $dateFin   = $this->request->getGet('date_fin')   ?? '';
+
+        return view('hotel/detail', [
+            'chambre'   => $chambre,
+            'user'      => $user,
+            'dateDebut' => $dateDebut,
+            'dateFin'   => $dateFin,
+        ]);
     }
 
     /**
@@ -193,6 +204,30 @@ class Hotel extends BaseController
             // Gestion des erreurs SQL (ex: l'utilisateur a déjà réservé CETTE chambre -> clé primaire composite)
             return redirect()->back()->withInput()->with('error', 'Erreur : Cette réservation existe déjà ou conflit technique.');
         }
+    }
+
+    /**
+     * Annule une réservation de l'utilisateur connecté
+     *
+     * @param int $reservationId Identifiant de la réservation
+     * @return \CodeIgniter\HTTP\RedirectResponse
+     */
+    public function annuler($reservationId)
+    {
+        if (!session()->get('isLoggedIn')) {
+            return redirect()->to('/login');
+        }
+
+        $userId = session()->get('user_id');
+        $reserveModel = new ReserveModel();
+
+        if ($reserveModel->annulerReservation($reservationId, $userId)) {
+            return redirect()->to('/mes-reservations')
+                ->with('success', 'Votre réservation a été annulée avec succès.');
+        }
+
+        return redirect()->to('/mes-reservations')
+            ->with('erreur', 'Impossible d\'annuler cette réservation (déjà passée ou introuvable).');
     }
 
     /**
