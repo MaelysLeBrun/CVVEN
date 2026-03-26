@@ -131,15 +131,24 @@ class LoginController extends BaseController
         ];
 
         // Générer le user_id au format USR001, USR002, etc. AVANT insertion
-        $lastUser = $model->selectMax('user_id')->first();
         $nextNumber = 1;
-        
-        if ($lastUser && $lastUser['user_id']) {
-            $lastNumber = (int)substr($lastUser['user_id'], 3);
-            $nextNumber = $lastNumber + 1;
+        $lastUser = $model->select('user_id')->orderBy('user_id', 'DESC')->first();
+
+        if ($lastUser && !empty($lastUser['user_id'])) {
+            $lastNumber = (int) preg_replace('/[^0-9]/', '', $lastUser['user_id']);
+            if ($lastNumber >= 1) {
+                $nextNumber = $lastNumber + 1;
+            }
         }
-        
-        $data['user_id'] = 'USR' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+
+        // Garantir l'unicité (gère les doublons potentiels)
+        $newId = 'USR' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+        while ($model->where('user_id', $newId)->first()) {
+            $nextNumber++;
+            $newId = 'USR' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+        }
+
+        $data['user_id'] = $newId;
         
         $model->insert($data);
         
