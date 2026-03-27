@@ -39,7 +39,8 @@ class UserModel extends Model
         'user_nom',
         'user_prenom',
         'user_mail',
-        'user_telephone'
+        'user_telephone',
+        'user_role'
     ];
 
     /**

@@ -56,6 +56,7 @@ class LoginController extends BaseController
         $session->set([
             'user_id'    => $user['user_id'],
             'user_login' => $user['user_login'],
+            'user_role'  => $user['user_role'] ?? 'client',
             'isLoggedIn' => true
         ]);
 

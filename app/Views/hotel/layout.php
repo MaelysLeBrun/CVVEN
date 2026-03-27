@@ -56,6 +56,26 @@
                                     <i class="bi bi-person-circle me-1"></i><?= esc(session()->get('user_login')) ?>
                                 </span>
                             </li>
+                            <?php if (session()->get('user_role') === 'administrateur'): ?>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button"
+                                   data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-shield-lock me-1"></i>Admin
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li>
+                                        <a class="dropdown-item" href="<?= base_url('admin/users') ?>">
+                                            <i class="bi bi-people me-2"></i>Utilisateurs
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="<?= base_url('admin/reservations') ?>">
+                                            <i class="bi bi-calendar-check me-2"></i>Réservations
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <?php endif; ?>
                             <li class="nav-item">
                                 <a class="nav-link" href="<?= base_url('reservation') ?>">
                                     <i class="bi bi-calendar-plus me-1"></i>Réserver

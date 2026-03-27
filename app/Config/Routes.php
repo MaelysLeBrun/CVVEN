@@ -26,4 +26,14 @@ $routes->get('reservation', 'Reservation::formulaire');
 $routes->post('reservation/reserver', 'Reservation::reserver');
 $routes->post('reservation/checkDisponibilite', 'Reservation::checkDisponibilite');
 
+// Administration (réservé aux administrateurs)
+$routes->group('admin', ['filter' => 'admin'], function($routes) {
+    $routes->get('users', 'AdminController::users');
+    $routes->get('users/edit/(:segment)', 'AdminController::editUser/$1');
+    $routes->post('users/update/(:segment)', 'AdminController::updateUser/$1');
+    $routes->post('users/delete/(:segment)', 'AdminController::deleteUser/$1');
+    $routes->get('reservations', 'AdminController::reservations');
+    $routes->post('reservations/delete/(:num)', 'AdminController::deleteReservation/$1');
+});
+
 
