@@ -165,6 +165,37 @@
             </small>
         </div>
 
+        <!-- Security question --> 
+        <?php
+            $securityQuestions = [
+            "Quel est le nom de votre premier animal ?",
+             "Dans quelle ville êtes-vous né ?",
+            "Quel est le prénom de votre mère ?",
+            "Quel est votre film préféré ?",
+            "Quel est le nom de votre école primaire ?"
+        ];
+        ?>
+
+<div class="mb-3">
+    <label for="security_question" class="form-label">Question de sécurité</label>
+    <select name="security_question" id="security_question" class="form-select" required>
+        <option value="" disabled selected>-- Choisissez une question --</option>
+        <?php foreach ($securityQuestions as $index => $question) : ?>
+            <option value="<?= $index ?>"><?= htmlspecialchars($question) ?></option>
+        <?php endforeach; ?>
+    </select>
+
+    <label for="security_answer" class="form-label mt-2">Votre réponse</label>
+    <input 
+        type="text" 
+        name="security_answer" 
+        id="security_answer" 
+        class="form-control" 
+        placeholder="Votre réponse..."
+        required
+    >
+</div>
+
         <!-- Submit -->
         <button class="btn-register" :disabled="loading || !passwordsMatch">
             <span x-show="!loading">
