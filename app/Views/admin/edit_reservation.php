@@ -70,7 +70,27 @@
                             </select>
                         </div>
 
-                        <!-- Séparateur -->
+                        <!-- Pension -->
+                        <div class="col-12">
+                            <div style="border-top:1px solid #EDE8DC;padding-top:1.25rem;margin-top:0.25rem;">
+                                <div style="display:flex;align-items:center;gap:6px;margin-bottom:0.75rem;">
+                                    <div style="width:22px;height:22px;background:rgba(201,176,122,0.15);border-radius:5px;display:flex;align-items:center;justify-content:center;color:#C9B07A;font-size:0.75rem;">
+                                        <i class="bi bi-cup-hot"></i>
+                                    </div>
+                                    <span style="font-family:'Outfit',sans-serif;font-size:0.78rem;font-weight:600;color:#7A7265;text-transform:uppercase;letter-spacing:0.06em;">Type de pension</span>
+                                </div>
+                                <select name="type_pension" class="form-select">
+                                    <option value="sans_pension"     <?= ($reservation['type_pension'] ?? '') === 'sans_pension'     ? 'selected' : '' ?>>Sans pension — 0 €/nuit</option>
+                                    <option value="demi_pension"     <?= ($reservation['type_pension'] ?? '') === 'demi_pension'     ? 'selected' : '' ?>>Demi-pension — +50 €/nuit</option>
+                                    <option value="pension_complete" <?= ($reservation['type_pension'] ?? '') === 'pension_complete' ? 'selected' : '' ?>>Pension complète — +100 €/nuit</option>
+                                </select>
+                                <div style="font-family:'Outfit',sans-serif;font-size:0.75rem;color:#7A7265;margin-top:0.4rem;">
+                                    <i class="bi bi-info-circle me-1"></i>Le prix total sera recalculé automatiquement.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Dates -->
                         <div class="col-12">
                             <div style="border-top:1px solid #EDE8DC;padding-top:1.25rem;margin-top:0.25rem;">
                                 <div style="display:flex;align-items:center;gap:6px;margin-bottom:0.75rem;">

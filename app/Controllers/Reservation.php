@@ -89,10 +89,16 @@ class Reservation extends Controller
                 ->with('erreurs', $this->validator->getErrors());
         }
 
-        $chamb_id = $this->request->getPost('chamb_id');
+        $chamb_id      = $this->request->getPost('chamb_id');
         $reser_dateDebut = $this->request->getPost('reser_dateDebut');
-        $reser_dateFin = $this->request->getPost('reser_dateFin');
-        $user_id = session()->get('user_id');
+        $reser_dateFin   = $this->request->getPost('reser_dateFin');
+        $type_pension    = $this->request->getPost('type_pension');
+        $user_id         = session()->get('user_id');
+
+        $pensionValides = array_keys(\App\Models\ReserveModel::PENSION_PRIX);
+        if (!in_array($type_pension, $pensionValides, true)) {
+            $type_pension = 'sans_pension';
+        }
 
         // Validation métier
         try {
@@ -120,17 +126,20 @@ class Reservation extends Controller
                 ->with('erreur', 'Cette chambre n\'est pas disponible pour les dates sélectionnées.');
         }
 
-        // Calculer le prix total
+        // Calculer le prix total (chambre + pension) × nuits
         $chambreModel = new ChambreModel();
         $chambre = $chambreModel->getChambreWithType($chamb_id);
         $nuits = $dateDebut->diff($dateFin)->days;
-        $prix_total = ($chambre && isset($chambre['prix_unitaire_nuit']))
-            ? round($chambre['prix_unitaire_nuit'] * $nuits, 2)
-            : null;
+
+        $prixChambre = ($chambre && isset($chambre['prix_unitaire_nuit']))
+            ? (float) $chambre['prix_unitaire_nuit']
+            : 0.0;
+        $prixPension = \App\Models\ReserveModel::PENSION_PRIX[$type_pension] ?? 0.0;
+        $prix_total  = round(($prixChambre + $prixPension) * $nuits, 2);
 
         // Créer la réservation
         try {
-            if ($this->reserveModel->creerReservation($user_id, $chamb_id, $reser_dateDebut, $reser_dateFin, $prix_total)) {
+            if ($this->reserveModel->creerReservation($user_id, $chamb_id, $reser_dateDebut, $reser_dateFin, $type_pension, $prix_total)) {
                 return redirect()->to(base_url('mes-reservations'))
                     ->with('success', 'Votre réservation a été confirmée avec succès !');
             }

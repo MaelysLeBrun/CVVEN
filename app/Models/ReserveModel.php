@@ -38,7 +38,14 @@ class ReserveModel extends Model
      * Champs autorisés pour l'insertion et la mise à jour
      * @var array<string>
      */
-    protected $allowedFields = ['user_id', 'chamb_id', 'reser_dateDebut', 'reser_dateFin', 'prix_total'];
+    protected $allowedFields = ['user_id', 'chamb_id', 'reser_dateDebut', 'reser_dateFin', 'reser_dateReservation', 'type_pension', 'prix_total'];
+
+    // Prix de pension par nuit
+    public const PENSION_PRIX = [
+        'pension_complete' => 100.0,
+        'demi_pension'     => 50.0,
+        'sans_pension'     => 0.0,
+    ];
 
     /**
      * Règles de validation pour sécuriser les données
@@ -66,14 +73,16 @@ class ReserveModel extends Model
     /**
      * Crée une nouvelle réservation
      */
-    public function creerReservation($user_id, $chamb_id, $dateDebut, $dateFin, $prix_total = null)
+    public function creerReservation($user_id, $chamb_id, $dateDebut, $dateFin, $type_pension = 'sans_pension', $prix_total = null)
     {
         return $this->insert([
-            'user_id'         => $user_id,
-            'chamb_id'        => $chamb_id,
-            'reser_dateDebut' => $dateDebut,
-            'reser_dateFin'   => $dateFin,
-            'prix_total'      => $prix_total,
+            'user_id'               => $user_id,
+            'chamb_id'              => $chamb_id,
+            'reser_dateDebut'       => $dateDebut,
+            'reser_dateFin'         => $dateFin,
+            'reser_dateReservation' => date('Y-m-d H:i:s'),
+            'type_pension'          => $type_pension,
+            'prix_total'            => $prix_total,
         ]);
     }
 

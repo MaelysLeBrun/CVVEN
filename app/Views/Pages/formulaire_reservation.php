@@ -48,6 +48,8 @@
             dateFin: '<?= esc($dateFin ?? '') ?>',
             chambreId: '<?= esc($chambreSelectionnee ?? '') ?>',
             chambresPrix: <?= json_encode($chambresPrix) ?>,
+            typePension: 'sans_pension',
+            pensionPrix: { 'pension_complete': 100, 'demi_pension': 50, 'sans_pension': 0 },
             disponible: null,
             checking: false,
             get nuits() {
@@ -59,8 +61,11 @@
             get prixUnitaire() {
                 return this.chambreId ? (this.chambresPrix[this.chambreId] || 0) : 0;
             },
+            get prixPension() {
+                return this.pensionPrix[this.typePension] || 0;
+            },
             get prixTotal() {
-                return this.prixUnitaire * this.nuits;
+                return (this.prixUnitaire + this.prixPension) * this.nuits;
             },
             async checkDisponibilite() {
                 if (!this.chambreId || !this.dateDebut || !this.dateFin) {
@@ -205,15 +210,71 @@
                                 <?php endforeach; ?>
                             </select>
 
+                            <hr style="border-color:#EDE8DC;margin:1.75rem 0;">
+
+                            <!-- Pension -->
+                            <div style="font-family:'Outfit',sans-serif;font-size:0.72rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#7A7265;display:flex;align-items:center;gap:8px;margin-bottom:1rem;">
+                                <div style="width:24px;height:24px;background:#EDE8DC;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#C9B07A;font-size:0.75rem;">
+                                    <i class="bi bi-cup-hot"></i>
+                                </div>
+                                Type de pension
+                            </div>
+
+                            <div class="row g-2 mb-3">
+                                <?php
+                                $pensions = [
+                                    'sans_pension'     => ['label' => 'Sans pension',     'sub' => 'Repas non inclus',              'prix' => '0 €/nuit',   'icon' => 'bi-slash-circle',    'color' => '#7A7265', 'bg' => 'rgba(122,114,101,0.08)', 'border' => '#DDD8CD'],
+                                    'demi_pension'     => ['label' => 'Demi-pension',      'sub' => 'Petit-déjeuner + dîner inclus', 'prix' => '+ 50 €/nuit','icon' => 'bi-cup-straw',       'color' => '#1e5a7a', 'bg' => 'rgba(44,110,138,0.08)',  'border' => 'rgba(44,110,138,0.35)'],
+                                    'pension_complete' => ['label' => 'Pension complète',  'sub' => 'Tous les repas inclus',         'prix' => '+ 100 €/nuit','icon'=> 'bi-brightness-high', 'color' => '#6B4226', 'bg' => 'rgba(184,134,11,0.08)',  'border' => 'rgba(201,176,122,0.5)'],
+                                ];
+                                foreach ($pensions as $val => $p): ?>
+                                <div class="col-md-4">
+                                    <label style="display:block;cursor:pointer;position:relative;">
+                                        <input type="radio" name="type_pension" value="<?= $val ?>"
+                                               x-model="typePension"
+                                               style="position:absolute;opacity:0;width:0;height:0;">
+                                        <div style="border-radius:10px;padding:0.85rem 0.9rem;transition:all 0.2s;position:relative;"
+                                             :style="{
+                                                 border:      typePension === '<?= $val ?>' ? '2px solid <?= $p['color'] ?>' : '2px solid <?= $p['border'] ?>',
+                                                 background:  typePension === '<?= $val ?>' ? '<?= $p['bg'] ?>'              : 'transparent',
+                                                 'box-shadow': typePension === '<?= $val ?>' ? '0 0 0 3px <?= $p['bg'] ?>'   : 'none'
+                                             }">
+                                            <!-- Checkmark -->
+                                            <div x-show="typePension === '<?= $val ?>'"
+                                                 style="position:absolute;top:-9px;right:-9px;width:20px;height:20px;
+                                                        background:<?= $p['color'] ?>;border-radius:50%;
+                                                        display:flex;align-items:center;justify-content:center;
+                                                        border:2px solid #F8F5EE;">
+                                                <i class="bi bi-check" style="color:#fff;font-size:0.7rem;line-height:1;"></i>
+                                            </div>
+                                            <div style="display:flex;align-items:center;gap:7px;margin-bottom:0.3rem;">
+                                                <i class="bi <?= $p['icon'] ?>" style="color:<?= $p['color'] ?>;font-size:0.9rem;"></i>
+                                                <span style="font-family:'Outfit',sans-serif;font-size:0.82rem;font-weight:600;color:#2C2416;">
+                                                    <?= $p['label'] ?>
+                                                </span>
+                                            </div>
+                                            <div style="font-family:'Outfit',sans-serif;font-size:0.7rem;color:#7A7265;margin-bottom:0.3rem;">
+                                                <?= $p['sub'] ?>
+                                            </div>
+                                            <div style="font-family:'Cormorant Garamond',serif;font-size:0.9rem;font-weight:700;color:<?= $p['color'] ?>;">
+                                                <?= $p['prix'] ?>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                                <?php endforeach; ?>
+                            </div>
+
                             <!-- Price summary -->
                             <div x-show="prixUnitaire > 0" x-transition
                                  style="background:#F8F5EE;border:2px solid #C9B07A;border-radius:10px;padding:1.1rem 1.25rem;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;">
                                 <div>
-                                    <div style="font-family:'Outfit',sans-serif;font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#7A7265;margin-bottom:0.2rem;">
+                                    <div style="font-family:'Outfit',sans-serif;font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#7A7265;margin-bottom:0.35rem;">
                                         <i class="bi bi-tag me-1" style="color:#C9B07A;"></i>Prix estimé
                                     </div>
-                                    <div style="font-family:'Outfit',sans-serif;font-size:0.82rem;color:#5A5248;">
-                                        <span x-text="prixUnitaire.toFixed(2).replace('.',',') + ' €/nuit'"></span>
+                                    <div style="font-family:'Outfit',sans-serif;font-size:0.78rem;color:#5A5248;line-height:1.6;">
+                                        <span x-text="prixUnitaire.toFixed(2).replace('.',',') + ' € chambre'"></span><br>
+                                        <span x-show="prixPension > 0" x-text="'+ ' + prixPension.toFixed(2).replace('.',',') + ' € pension'"></span>
                                         <span x-show="nuits > 0" x-text="' × ' + nuits + (nuits > 1 ? ' nuits' : ' nuit')"></span>
                                     </div>
                                 </div>

@@ -87,10 +87,10 @@ class AdminController extends BaseController
         $db = \Config\Database::connect();
 
         $reservations = $db->table('Reserve r')
-            ->select('r.reser_id, r.reser_dateDebut, r.reser_dateFin, r.prix_total,
+            ->select('r.reser_id, r.reser_dateDebut, r.reser_dateFin, r.type_pension, r.prix_total,
                       u.user_id, u.user_nom, u.user_prenom, u.user_login,
                       c.chamb_id, c.chamb_numero, c.chamb_emplacement,
-                      t.type_libelle')
+                      t.type_libelle, t.prix_unitaire_nuit')
             ->join('Utilisateur u', 'u.user_id = r.user_id')
             ->join('Chambre c', 'c.chamb_id = r.chamb_id')
             ->join('Type_Chambre t', 't.type_id = c.type_id')
@@ -106,10 +106,10 @@ class AdminController extends BaseController
         $db = \Config\Database::connect();
 
         $reservation = $db->table('Reserve r')
-            ->select('r.reser_id, r.reser_dateDebut, r.reser_dateFin,
+            ->select('r.reser_id, r.reser_dateDebut, r.reser_dateFin, r.type_pension,
                       u.user_id, u.user_nom, u.user_prenom, u.user_login,
                       c.chamb_id, c.chamb_numero, c.chamb_emplacement,
-                      t.type_libelle')
+                      t.type_libelle, t.prix_unitaire_nuit')
             ->join('Utilisateur u', 'u.user_id = r.user_id')
             ->join('Chambre c', 'c.chamb_id = r.chamb_id')
             ->join('Type_Chambre t', 't.type_id = c.type_id')
@@ -144,18 +144,34 @@ class AdminController extends BaseController
             return redirect()->to('/admin/reservations')->with('erreur', 'Réservation introuvable.');
         }
 
-        $dateDebut = $this->request->getPost('reser_dateDebut');
-        $dateFin   = $this->request->getPost('reser_dateFin');
-        $chambId   = $this->request->getPost('chamb_id');
+        $dateDebut    = $this->request->getPost('reser_dateDebut');
+        $dateFin      = $this->request->getPost('reser_dateFin');
+        $chambId      = $this->request->getPost('chamb_id');
+        $type_pension = $this->request->getPost('type_pension');
+
+        $pensionValides = array_keys(\App\Models\ReserveModel::PENSION_PRIX);
+        if (!in_array($type_pension, $pensionValides, true)) {
+            $type_pension = 'sans_pension';
+        }
 
         if ($dateDebut >= $dateFin) {
             return redirect()->back()->withInput()->with('erreur', 'La date de départ doit être postérieure à la date d\'arrivée.');
         }
 
+        // Recalculer le prix total (chambre + pension) × nuits
+        $chambreModel = new ChambreModel();
+        $chambre      = $chambreModel->getChambreWithType($chambId);
+        $nuits        = (new \DateTime($dateDebut))->diff(new \DateTime($dateFin))->days;
+        $prixChambre  = ($chambre && isset($chambre['prix_unitaire_nuit'])) ? (float) $chambre['prix_unitaire_nuit'] : 0.0;
+        $prixPension  = \App\Models\ReserveModel::PENSION_PRIX[$type_pension] ?? 0.0;
+        $prix_total   = round(($prixChambre + $prixPension) * $nuits, 2);
+
         $db->table('Reserve')->where('reser_id', $id)->update([
             'reser_dateDebut' => $dateDebut,
             'reser_dateFin'   => $dateFin,
             'chamb_id'        => $chambId,
+            'type_pension'    => $type_pension,
+            'prix_total'      => $prix_total,
         ]);
 
         return redirect()->to('/admin/reservations')->with('success', 'Réservation mise à jour.');

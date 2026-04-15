@@ -1,6 +1,22 @@
 <?= $this->extend('hotel/layout') ?>
 <?= $this->section('content') ?>
 
+<?php
+// Helper : badge pension
+function pensionBadge(string $type): string {
+    $map = [
+        'pension_complete' => ['Pension complète', 'bi-brightness-high',  '#6B4226', 'rgba(184,134,11,0.12)',  'rgba(201,176,122,0.5)'],
+        'demi_pension'     => ['Demi-pension',      'bi-cup-straw',        '#1e5a7a', 'rgba(44,110,138,0.12)',  'rgba(44,110,138,0.35)'],
+        'sans_pension'     => ['Sans pension',      'bi-slash-circle',     '#7A7265', 'rgba(122,114,101,0.08)', '#DDD8CD'],
+    ];
+    [$label, $icon, $color, $bg, $border] = $map[$type] ?? $map['sans_pension'];
+    return sprintf(
+        '<span style="display:inline-flex;align-items:center;gap:4px;font-family:\'Outfit\',sans-serif;font-size:0.65rem;font-weight:600;letter-spacing:0.04em;background:%s;color:%s;border:1px solid %s;border-radius:50px;padding:0.18rem 0.55rem;white-space:nowrap;"><i class="bi %s" style="font-size:0.6rem;"></i>%s</span>',
+        $bg, $color, $border, $icon, $label
+    );
+}
+?>
+
 <!-- ── Page header ──────────────────────────────────────────── -->
 <div class="page-header">
     <div class="container">
@@ -140,9 +156,12 @@
                     </div>
                 </div>
 
-                <!-- Type -->
-                <div style="font-family:'Outfit',sans-serif;font-size:0.82rem;color:#2C2416;">
-                    <?= esc($r['type_libelle']) ?>
+                <!-- Type + Pension -->
+                <div>
+                    <div style="font-family:'Outfit',sans-serif;font-size:0.82rem;color:#2C2416;margin-bottom:0.3rem;">
+                        <?= esc($r['type_libelle']) ?>
+                    </div>
+                    <?= pensionBadge($r['type_pension'] ?? 'sans_pension') ?>
                 </div>
 
                 <!-- Arrivée -->

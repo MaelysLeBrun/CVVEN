@@ -1,6 +1,21 @@
 <?= $this->extend('hotel/layout') ?>
 <?= $this->section('content') ?>
 
+<?php
+function pensionBadgeMesRes(string $type): string {
+    $map = [
+        'pension_complete' => ['Pension complète', 'bi-brightness-high',  '#6B4226', 'rgba(184,134,11,0.12)',  'rgba(201,176,122,0.5)'],
+        'demi_pension'     => ['Demi-pension',      'bi-cup-straw',        '#1e5a7a', 'rgba(44,110,138,0.12)',  'rgba(44,110,138,0.35)'],
+        'sans_pension'     => ['Sans pension',      'bi-slash-circle',     '#7A7265', 'rgba(122,114,101,0.08)', '#DDD8CD'],
+    ];
+    [$label, $icon, $color, $bg, $border] = $map[$type] ?? $map['sans_pension'];
+    return sprintf(
+        '<span style="display:inline-flex;align-items:center;gap:4px;font-family:\'Outfit\',sans-serif;font-size:0.7rem;font-weight:600;background:%s;color:%s;border:1px solid %s;border-radius:50px;padding:0.22rem 0.65rem;"><i class="bi %s" style="font-size:0.65rem;"></i>%s</span>',
+        $bg, $color, $border, $icon, $label
+    );
+}
+?>
+
 <!-- Page header -->
 <div class="page-header">
     <div class="container">
@@ -166,6 +181,17 @@
                                             <?= date('H:i', strtotime($reservation['reser_dateFin'])) ?>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+
+                            <!-- Pension -->
+                            <div style="margin-bottom:1.25rem;padding-bottom:1.25rem;border-bottom:1px solid #EDE8DC;display:flex;align-items:center;gap:8px;">
+                                <div style="width:32px;height:32px;background:#EDE8DC;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#C9B07A;font-size:0.85rem;flex-shrink:0;">
+                                    <i class="bi bi-cup-hot"></i>
+                                </div>
+                                <div>
+                                    <div style="font-family:'Outfit',sans-serif;font-size:0.72rem;color:#7A7265;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:0.3rem;">Pension</div>
+                                    <?= pensionBadgeMesRes($reservation['type_pension'] ?? 'sans_pension') ?>
                                 </div>
                             </div>
 
