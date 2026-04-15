@@ -86,6 +86,10 @@
             </button>
         </form>
 
+        <div class="center-screen">
+            <a href="/forgot-password">Mot de passe oublié ?</a>
+        </div>
+
         <div class="divider">ou</div>
 
         <a href="<?= base_url('register') ?>" class="btn-register">
