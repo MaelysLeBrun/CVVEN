@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\ChambreModel;
 use App\Models\ReserveModel;
 use App\Models\UserModel;
 use CodeIgniter\Controller;
@@ -119,9 +120,17 @@ class Reservation extends Controller
                 ->with('erreur', 'Cette chambre n\'est pas disponible pour les dates sélectionnées.');
         }
 
+        // Calculer le prix total
+        $chambreModel = new ChambreModel();
+        $chambre = $chambreModel->getChambreWithType($chamb_id);
+        $nuits = $dateDebut->diff($dateFin)->days;
+        $prix_total = ($chambre && isset($chambre['prix_unitaire_nuit']))
+            ? round($chambre['prix_unitaire_nuit'] * $nuits, 2)
+            : null;
+
         // Créer la réservation
         try {
-            if ($this->reserveModel->creerReservation($user_id, $chamb_id, $reser_dateDebut, $reser_dateFin)) {
+            if ($this->reserveModel->creerReservation($user_id, $chamb_id, $reser_dateDebut, $reser_dateFin, $prix_total)) {
                 return redirect()->to(base_url('mes-reservations'))
                     ->with('success', 'Votre réservation a été confirmée avec succès !');
             }

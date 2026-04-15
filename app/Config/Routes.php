@@ -33,6 +33,8 @@ $routes->group('admin', ['filter' => 'admin'], function($routes) {
     $routes->post('users/update/(:segment)', 'AdminController::updateUser/$1');
     $routes->post('users/delete/(:segment)', 'AdminController::deleteUser/$1');
     $routes->get('reservations', 'AdminController::reservations');
+    $routes->get('reservations/edit/(:num)', 'AdminController::editReservation/$1');
+    $routes->post('reservations/update/(:num)', 'AdminController::updateReservation/$1');
     $routes->post('reservations/delete/(:num)', 'AdminController::deleteReservation/$1');
 });
 

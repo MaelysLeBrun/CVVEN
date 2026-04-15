@@ -169,12 +169,25 @@
                                 </div>
                             </div>
 
-                            <!-- Status -->
+                            <!-- Price & Status -->
                             <div style="display:flex;align-items:center;justify-content:space-between;">
                                 <span class="badge <?= $statutClass ?>"
                                       style="font-family:'Outfit',sans-serif;font-size:0.75rem;font-weight:600;padding:0.4rem 0.9rem;border-radius:50px;letter-spacing:0.06em;">
                                     <i class="bi <?= $icone ?> me-1"></i><?= $statut ?>
                                 </span>
+                                <?php if (!empty($reservation['prix_total'])): ?>
+                                <div style="text-align:right;">
+                                    <div style="font-family:'Outfit',sans-serif;font-size:0.7rem;color:#7A7265;text-transform:uppercase;letter-spacing:0.06em;">Prix total</div>
+                                    <div style="font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:700;color:#162B19;">
+                                        <?= number_format($reservation['prix_total'], 2, ',', ' ') ?> €
+                                    </div>
+                                    <?php if (!empty($reservation['prix_unitaire_nuit'])): ?>
+                                    <div style="font-family:'Outfit',sans-serif;font-size:0.7rem;color:#7A7265;">
+                                        <?= number_format($reservation['prix_unitaire_nuit'], 2, ',', ' ') ?> €/nuit
+                                    </div>
+                                    <?php endif; ?>
+                                </div>
+                                <?php endif; ?>
                             </div>
                         </div>
 
@@ -262,15 +275,17 @@
         $maintenant2 = new DateTime();
         $aVenir = 0;
         $totalNuits = 0;
+        $totalDepense = 0;
         foreach ($reservations as $r) {
             $d1 = new DateTime($r['reser_dateDebut']);
             $d2 = new DateTime($r['reser_dateFin']);
             if ($d2 >= $maintenant2) $aVenir++;
             $totalNuits += $d1->diff($d2)->days;
+            if (!empty($r['prix_total'])) $totalDepense += $r['prix_total'];
         }
         ?>
         <div class="row g-3 mt-4">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="stat-card">
                     <div class="stat-value"><?= count($reservations) ?></div>
                     <div class="stat-label">
@@ -278,18 +293,24 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="stat-card">
                     <div class="stat-value" style="color:#3A6341;"><?= $aVenir ?></div>
                     <div class="stat-label">À venir / en cours</div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="stat-card">
                     <div class="stat-value" style="color:#B8860B;"><?= $totalNuits ?></div>
                     <div class="stat-label">
                         Nuit<?= $totalNuits > 1 ? 's' : '' ?> réservée<?= $totalNuits > 1 ? 's' : '' ?>
                     </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-value" style="color:#6B4226;"><?= number_format($totalDepense, 2, ',', ' ') ?> €</div>
+                    <div class="stat-label">Total dépensé</div>
                 </div>
             </div>
         </div>

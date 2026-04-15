@@ -189,11 +189,22 @@ class Hotel extends BaseController
         // --- ETAPE B : Création de la Réservation ---
         $reserveModel = new ReserveModel();
 
+        // Calculer le prix total
+        $chambreModel = new ChambreModel();
+        $chambreInfo  = $chambreModel->getChambreWithType($post['chamb_id']);
+        $d1Legacy     = new \DateTime($post['date_debut']);
+        $d2Legacy     = new \DateTime($post['date_fin']);
+        $nuitsLegacy  = $d1Legacy->diff($d2Legacy)->days;
+        $prix_total   = ($chambreInfo && isset($chambreInfo['prix_unitaire_nuit']))
+            ? round($chambreInfo['prix_unitaire_nuit'] * $nuitsLegacy, 2)
+            : null;
+
         $dataReservation = [
             'user_id'         => $userId,
             'chamb_id'        => $post['chamb_id'],
             'reser_dateDebut' => $post['date_debut'],
-            'reser_dateFin'   => $post['date_fin']
+            'reser_dateFin'   => $post['date_fin'],
+            'prix_total'      => $prix_total,
         ];
 
         // Tentative d'insertion
@@ -249,7 +260,7 @@ class Hotel extends BaseController
         $reserveModel = new ReserveModel();
 
         // Récupérer les réservations avec les détails de la chambre
-        $reservations = $reserveModel->select('Reserve.*, Chambre.chamb_numero, Chambre.chamb_emplacement, Type_Chambre.type_libelle, Type_Chambre.type_desc')
+        $reservations = $reserveModel->select('Reserve.*, Chambre.chamb_numero, Chambre.chamb_emplacement, Type_Chambre.type_libelle, Type_Chambre.type_desc, Type_Chambre.prix_unitaire_nuit')
                                     ->join('Chambre', 'Chambre.chamb_id = Reserve.chamb_id')
                                     ->join('Type_Chambre', 'Type_Chambre.type_id = Chambre.type_id')
                                     ->where('Reserve.user_id', $userId)

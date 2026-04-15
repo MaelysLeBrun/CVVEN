@@ -37,10 +37,17 @@
         </div>
         <?php endif; ?>
 
+        <?php
+        $chambresPrix = [];
+        foreach ($chambres as $c) {
+            $chambresPrix[$c['chamb_id']] = (float)($c['prix_unitaire_nuit'] ?? 0);
+        }
+        ?>
         <div class="row g-4" x-data="{
             dateDebut: '<?= esc($dateDebut ?? '') ?>',
             dateFin: '<?= esc($dateFin ?? '') ?>',
             chambreId: '<?= esc($chambreSelectionnee ?? '') ?>',
+            chambresPrix: <?= json_encode($chambresPrix) ?>,
             disponible: null,
             checking: false,
             get nuits() {
@@ -48,6 +55,12 @@
                 const d1 = new Date(this.dateDebut);
                 const d2 = new Date(this.dateFin);
                 return Math.max(0, Math.ceil((d2 - d1) / (1000 * 60 * 60 * 24)));
+            },
+            get prixUnitaire() {
+                return this.chambreId ? (this.chambresPrix[this.chambreId] || 0) : 0;
+            },
+            get prixTotal() {
+                return this.prixUnitaire * this.nuits;
             },
             async checkDisponibilite() {
                 if (!this.chambreId || !this.dateDebut || !this.dateFin) {
@@ -187,10 +200,38 @@
                                 <?php foreach ($chambres as $chambre): ?>
                                     <option value="<?= esc($chambre['chamb_id']) ?>"
                                         <?= ($chambreSelectionnee ?? '') === $chambre['chamb_id'] ? 'selected' : '' ?>>
-                                        Chambre <?= esc($chambre['chamb_numero']) ?> — <?= esc($chambre['type_libelle']) ?> — <?= esc($chambre['chamb_emplacement']) ?>
+                                        Chambre <?= esc($chambre['chamb_numero']) ?> — <?= esc($chambre['type_libelle']) ?> — <?= esc($chambre['chamb_emplacement']) ?><?= !empty($chambre['prix_unitaire_nuit']) ? ' — ' . number_format($chambre['prix_unitaire_nuit'], 2, ',', ' ') . ' €/nuit' : '' ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>
+
+                            <!-- Price summary -->
+                            <div x-show="prixUnitaire > 0" x-transition
+                                 style="background:#F8F5EE;border:2px solid #C9B07A;border-radius:10px;padding:1.1rem 1.25rem;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;">
+                                <div>
+                                    <div style="font-family:'Outfit',sans-serif;font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#7A7265;margin-bottom:0.2rem;">
+                                        <i class="bi bi-tag me-1" style="color:#C9B07A;"></i>Prix estimé
+                                    </div>
+                                    <div style="font-family:'Outfit',sans-serif;font-size:0.82rem;color:#5A5248;">
+                                        <span x-text="prixUnitaire.toFixed(2).replace('.',',') + ' €/nuit'"></span>
+                                        <span x-show="nuits > 0" x-text="' × ' + nuits + (nuits > 1 ? ' nuits' : ' nuit')"></span>
+                                    </div>
+                                </div>
+                                <div style="text-align:right;flex-shrink:0;">
+                                    <template x-if="nuits > 0">
+                                        <div>
+                                            <div style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:700;color:#162B19;line-height:1;"
+                                                 x-text="prixTotal.toFixed(2).replace('.',',') + ' €'"></div>
+                                            <div style="font-family:'Outfit',sans-serif;font-size:0.7rem;color:#7A7265;">Total TTC</div>
+                                        </div>
+                                    </template>
+                                    <template x-if="nuits === 0">
+                                        <div style="font-family:'Outfit',sans-serif;font-size:0.75rem;color:#7A7265;font-style:italic;">
+                                            Sélectionnez des dates
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
 
                             <!-- Availability indicator -->
                             <div x-show="disponible !== null && chambreId && dateDebut && dateFin"
@@ -257,11 +298,18 @@
                                         <?= esc($chambre['type_libelle']) ?>
                                     </span>
                                 </div>
-                                <div style="display:flex;align-items:center;gap:5px;margin-bottom:0.25rem;">
-                                    <i class="bi bi-geo-alt" style="color:#C9B07A;font-size:0.72rem;"></i>
-                                    <span style="font-family:'Outfit',sans-serif;font-size:0.78rem;color:#7A7265;">
-                                        <?= esc($chambre['chamb_emplacement']) ?>
+                                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.25rem;">
+                                    <div style="display:flex;align-items:center;gap:5px;">
+                                        <i class="bi bi-geo-alt" style="color:#C9B07A;font-size:0.72rem;"></i>
+                                        <span style="font-family:'Outfit',sans-serif;font-size:0.78rem;color:#7A7265;">
+                                            <?= esc($chambre['chamb_emplacement']) ?>
+                                        </span>
+                                    </div>
+                                    <?php if (!empty($chambre['prix_unitaire_nuit'])): ?>
+                                    <span style="font-family:'Cormorant Garamond',serif;font-size:0.95rem;font-weight:700;color:#162B19;white-space:nowrap;">
+                                        <?= number_format($chambre['prix_unitaire_nuit'], 2, ',', ' ') ?> €<span style="font-family:'Outfit',sans-serif;font-size:0.65rem;font-weight:400;color:#7A7265;">/nuit</span>
                                     </span>
+                                    <?php endif; ?>
                                 </div>
                                 <?php if ($chambre['chamb_remarque']): ?>
                                 <div style="font-family:'Outfit',sans-serif;font-size:0.75rem;color:#4E8A5A;display:flex;align-items:center;gap:5px;">

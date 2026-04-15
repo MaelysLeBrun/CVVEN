@@ -38,7 +38,7 @@ class ReserveModel extends Model
      * Champs autorisés pour l'insertion et la mise à jour
      * @var array<string>
      */
-    protected $allowedFields = ['user_id', 'chamb_id', 'reser_dateDebut', 'reser_dateFin'];
+    protected $allowedFields = ['user_id', 'chamb_id', 'reser_dateDebut', 'reser_dateFin', 'prix_total'];
 
     /**
      * Règles de validation pour sécuriser les données
@@ -66,13 +66,14 @@ class ReserveModel extends Model
     /**
      * Crée une nouvelle réservation
      */
-    public function creerReservation($user_id, $chamb_id, $dateDebut, $dateFin)
+    public function creerReservation($user_id, $chamb_id, $dateDebut, $dateFin, $prix_total = null)
     {
         return $this->insert([
-            'user_id' => $user_id,
-            'chamb_id' => $chamb_id,
+            'user_id'         => $user_id,
+            'chamb_id'        => $chamb_id,
             'reser_dateDebut' => $dateDebut,
-            'reser_dateFin' => $dateFin
+            'reser_dateFin'   => $dateFin,
+            'prix_total'      => $prix_total,
         ]);
     }
 
@@ -102,7 +103,7 @@ class ReserveModel extends Model
     public function getAllChambres()
     {
         return $this->db->table('Chambre c')
-            ->select('c.chamb_id, c.chamb_numero, c.chamb_emplacement, c.chamb_remarque, t.type_id, t.type_libelle, t.type_desc')
+            ->select('c.chamb_id, c.chamb_numero, c.chamb_emplacement, c.chamb_remarque, t.type_id, t.type_libelle, t.type_desc, t.prix_unitaire_nuit')
             ->join('Type_Chambre t', 't.type_id = c.type_id')
             ->orderBy('c.chamb_numero', 'ASC')
             ->get()

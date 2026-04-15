@@ -84,15 +84,16 @@
 
             <!-- En-tête -->
             <div style="background:linear-gradient(135deg,#162B19,#2A4A2E);">
-                <div style="display:grid;grid-template-columns:60px 1.4fr 120px 1fr 130px 130px 120px 60px;gap:0;align-items:center;padding:0.875rem 1.5rem;">
+                <div style="display:grid;grid-template-columns:60px 1.4fr 120px 1fr 130px 130px 110px 110px 90px;gap:0;align-items:center;padding:0.875rem 1.5rem;">
                     <div style="font-family:'Outfit',sans-serif;font-size:0.68rem;font-weight:600;color:rgba(201,176,122,0.8);text-transform:uppercase;letter-spacing:0.1em;">#</div>
                     <div style="font-family:'Outfit',sans-serif;font-size:0.68rem;font-weight:600;color:rgba(201,176,122,0.8);text-transform:uppercase;letter-spacing:0.1em;">Utilisateur</div>
                     <div style="font-family:'Outfit',sans-serif;font-size:0.68rem;font-weight:600;color:rgba(201,176,122,0.8);text-transform:uppercase;letter-spacing:0.1em;">Chambre</div>
                     <div style="font-family:'Outfit',sans-serif;font-size:0.68rem;font-weight:600;color:rgba(201,176,122,0.8);text-transform:uppercase;letter-spacing:0.1em;">Type</div>
                     <div style="font-family:'Outfit',sans-serif;font-size:0.68rem;font-weight:600;color:rgba(201,176,122,0.8);text-transform:uppercase;letter-spacing:0.1em;">Arrivée</div>
                     <div style="font-family:'Outfit',sans-serif;font-size:0.68rem;font-weight:600;color:rgba(201,176,122,0.8);text-transform:uppercase;letter-spacing:0.1em;">Départ</div>
+                    <div style="font-family:'Outfit',sans-serif;font-size:0.68rem;font-weight:600;color:rgba(201,176,122,0.8);text-transform:uppercase;letter-spacing:0.1em;">Prix total</div>
                     <div style="font-family:'Outfit',sans-serif;font-size:0.68rem;font-weight:600;color:rgba(201,176,122,0.8);text-transform:uppercase;letter-spacing:0.1em;">Statut</div>
-                    <div style="font-family:'Outfit',sans-serif;font-size:0.68rem;font-weight:600;color:rgba(201,176,122,0.8);text-transform:uppercase;letter-spacing:0.1em;text-align:center;"></div>
+                    <div style="font-family:'Outfit',sans-serif;font-size:0.68rem;font-weight:600;color:rgba(201,176,122,0.8);text-transform:uppercase;letter-spacing:0.1em;text-align:center;">Actions</div>
                 </div>
             </div>
 
@@ -106,7 +107,7 @@
             ?>
             <div style="
                 display:grid;
-                grid-template-columns:60px 1.4fr 120px 1fr 130px 130px 120px 60px;
+                grid-template-columns:60px 1.4fr 120px 1fr 130px 130px 110px 110px 90px;
                 gap:0;align-items:center;
                 padding:1rem 1.5rem;
                 background:<?= $i % 2 === 0 ? '#F8F5EE' : '#FAF8F3' ?>;
@@ -161,6 +162,17 @@
                     </div>
                 </div>
 
+                <!-- Prix total -->
+                <div>
+                    <?php if (!empty($r['prix_total'])): ?>
+                        <div style="font-family:'Cormorant Garamond',serif;font-size:0.95rem;font-weight:600;color:#162B19;">
+                            <?= number_format($r['prix_total'], 2, ',', ' ') ?> €
+                        </div>
+                    <?php else: ?>
+                        <div style="font-family:'Outfit',sans-serif;font-size:0.75rem;color:#DDD8CD;">—</div>
+                    <?php endif; ?>
+                </div>
+
                 <!-- Statut -->
                 <div>
                     <?php if ($passee): ?>
@@ -178,8 +190,20 @@
                     <?php endif; ?>
                 </div>
 
-                <!-- Supprimer -->
-                <div style="text-align:center;">
+                <!-- Actions -->
+                <div style="display:flex;align-items:center;justify-content:center;gap:0.4rem;">
+                    <a href="<?= base_url('admin/reservations/edit/' . $r['reser_id']) ?>"
+                       style="
+                            display:inline-flex;align-items:center;justify-content:center;
+                            width:32px;height:32px;border-radius:6px;
+                            background:rgba(42,74,46,0.08);border:1px solid rgba(42,74,46,0.2);
+                            color:#2A4A2E;transition:all 0.25s;text-decoration:none;
+                       "
+                       title="Modifier"
+                       onmouseover="this.style.background='#2A4A2E';this.style.color='#E8D8A8'"
+                       onmouseout="this.style.background='rgba(42,74,46,0.08)';this.style.color='#2A4A2E'">
+                        <i class="bi bi-pencil" style="font-size:0.8rem;"></i>
+                    </a>
                     <form method="post"
                           action="<?= base_url('admin/reservations/delete/' . $r['reser_id']) ?>"
                           class="d-inline"

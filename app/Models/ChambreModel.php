@@ -55,7 +55,7 @@ class ChambreModel extends Model
      */
     public function getChambresAvecType()
     {
-        return $this->select('Chambre.*, Type_Chambre.type_libelle, Type_Chambre.type_desc')
+        return $this->select('Chambre.*, Type_Chambre.type_libelle, Type_Chambre.type_desc, Type_Chambre.prix_unitaire_nuit')
                     ->join('Type_Chambre', 'Type_Chambre.type_id = Chambre.type_id')
                     ->findAll();
     }
@@ -68,7 +68,7 @@ class ChambreModel extends Model
      */
     public function getChambreDetail($id)
     {
-        return $this->select('Chambre.*, Type_Chambre.type_libelle, Type_Chambre.type_desc')
+        return $this->select('Chambre.*, Type_Chambre.type_libelle, Type_Chambre.type_desc, Type_Chambre.prix_unitaire_nuit')
                     ->join('Type_Chambre', 'Type_Chambre.type_id = Chambre.type_id')
                     ->where('chamb_id', $id)
                     ->first();
@@ -112,7 +112,7 @@ class ChambreModel extends Model
      */
     public function getChambresDisponiblesParType($typeId, $dateDebut = null, $dateFin = null)
     {
-        $builder = $this->select('Chambre.*, Type_Chambre.type_libelle, Type_Chambre.type_desc')
+        $builder = $this->select('Chambre.*, Type_Chambre.type_libelle, Type_Chambre.type_desc, Type_Chambre.prix_unitaire_nuit')
                         ->join('Type_Chambre', 'Type_Chambre.type_id = Chambre.type_id')
                         ->where('Chambre.type_id', $typeId);
 
@@ -140,7 +140,7 @@ class ChambreModel extends Model
     public function getChambreWithType($chamb_id)
     {
         return $this->db->table('Chambre c')
-            ->select('c.*, t.type_libelle, t.type_desc')
+            ->select('c.*, t.type_libelle, t.type_desc, t.prix_unitaire_nuit')
             ->join('Type_Chambre t', 't.type_id = c.type_id')
             ->where('c.chamb_id', $chamb_id)
             ->get()
