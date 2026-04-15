@@ -26,10 +26,10 @@ class Database extends Config
      */
     public array $default = [
         'DSN'          => '',
-        'hostname'     => '127.0.0.1',
-        'username'     => 'root',
-        'password'     => '',
-        'database'     => 'CVVEN',
+        'hostname'     => '',  // set in __construct via env
+        'username'     => '',  // set in __construct via env
+        'password'     => '',  // set in __construct via env
+        'database'     => '',  // set in __construct via env
         'DBDriver'     => 'MySQLi',
         'DBPrefix'     => '',
         'pConnect'     => false,
@@ -193,6 +193,12 @@ class Database extends Config
     public function __construct()
     {
         parent::__construct();
+
+        // Lecture des variables d'environnement Docker (avec fallback local)
+        $this->default['hostname'] = getenv('DB_HOSTNAME') ?: '127.0.0.1';
+        $this->default['username'] = getenv('DB_USERNAME') ?: 'root';
+        $this->default['password'] = getenv('DB_PASSWORD') ?: '';
+        $this->default['database'] = getenv('DB_DATABASE') ?: 'CVVEN';
 
         // Ensure that we always set the database group to 'tests' if
         // we are currently running an automated test suite, so that

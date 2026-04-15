@@ -1,0 +1,39 @@
+services:
+  app:
+    build: .
+    container_name: cvven_app
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    environment:
+      CI_ENVIRONMENT: production
+      DB_HOSTNAME: db
+      DB_DATABASE: CVVEN
+      DB_USERNAME: cvven_user
+      DB_PASSWORD: cvven_pass
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./writable:/var/www/html/writable
+
+  db:
+    image: mysql:8.0
+    container_name: cvven_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root_secret
+      MYSQL_DATABASE: CVVEN
+      MYSQL_USER: cvven_user
+      MYSQL_PASSWORD: cvven_pass
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot_secret"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  db_data:
