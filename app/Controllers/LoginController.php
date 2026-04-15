@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\UserModel;
+use App\Models\QuestionModel;
 
 /**
  * Contrôleur pour l'authentification des utilisateurs
@@ -50,7 +51,10 @@ class LoginController extends BaseController
         $user = $model->where('user_login', $login)->first();
 
         if (!$user || !password_verify($password, $user['user_mdp'])) {
-            return redirect()->back()->with('error', 'Identifiants incorrects');
+
+            //protection contre XSS avec une fonction de CodeIgniter
+            $safePassword = esc($password);
+            return redirect()->back()->with('error', 'Le mot de passe ' . $safePassword . ' est incorrect.');
         }
 
         $session->set([
@@ -68,8 +72,12 @@ class LoginController extends BaseController
      */
     public function showRegister()
     {
-        return view('auth/register');
+        $questionModel = new QuestionModel();
+
+        return view('auth/register', ['questions' => $questionModel->findAll()]);
     }
+
+    
 
     /**
      * Traite l'inscription d'un nouvel utilisateur
